@@ -1,0 +1,341 @@
+/* ============================================================
+   Pantalla: Login / Inicio de sesión
+   ============================================================ */
+
+
+
+/* ---------- Panel izquierdo (marca) ---------- */
+.login-wrapper {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  overflow: hidden;
+  background: var(--blanco);
+}
+
+/* Capa 1: forma oscura del panel izquierdo (todo el corte diagonal vive aquí) */
+.bg-navy {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(160deg, var(--azul-oscuro) 0%, var(--azul-oscuro-2) 55%, #0d2c5c 100%);
+  clip-path: polygon(0 0, 49% 0, 38% 100%, 0 100%);
+}
+
+/* Capa 2: franja de acento, calculada con LOS MISMOS puntos que la capa 1
+   así el borde izquierdo de esta franja siempre calza con el borde derecho de bg-navy */
+.bg-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(160deg, #16357a, #2f6fed 60%, #7fb0ff);
+  clip-path: polygon(48% 0, 50% 0, 39% 100%, 36% 100%);
+}
+
+/* ---------- Panel izquierdo (marca) ---------- */
+
+.login-brand {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  background: transparent;
+  color: var(--blanco);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 60px 40px;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* patrón de puntos sutil, esquina inferior */
+.login-brand::before {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  right: -40px;
+  width: 260px;
+  height: 260px;
+  background-image: radial-gradient(rgba(255,255,255,0.18) 1.5px, transparent 1.5px);
+  background-size: 16px 16px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+
+.login-brand > * { position: relative; z-index: 1; }
+
+.brand-logo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--blanco);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px;
+  overflow: hidden;
+}
+
+.brand-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.brand-title h1 {
+  font-size: 26px;
+  letter-spacing: .5px;
+  line-height: 1.3;
+}
+
+.brand-title h1 span {
+  display: block;
+  color: #6fa8ff;
+}
+
+.brand-title p {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #b8c9e8;
+  letter-spacing: .5px;
+}
+
+.brand-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.25);
+}
+
+.brand-project {
+  background: var(--blanco);
+  border-radius: 14px;
+  padding: 8px 18px;
+  display: inline-block;
+}
+
+.brand-project img {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+.brand-devs {
+  font-size: 12px;
+  color: #d4dff2;
+  line-height: 1.9;
+}
+
+.brand-devs strong {
+  display: block;
+  font-size: 13px;
+  color: var(--blanco);
+}
+
+.brand-devs .label {
+  margin-top: 4px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #7c93bd;
+}
+
+.brand-fingerprint {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  opacity: 0.5;
+}
+
+.brand-fingerprint img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
+
+/* ---------- Panel derecho (formulario) ---------- */
+
+.login-form-side {
+  position: relative;
+  flex: 1.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: transparent;
+}
+
+/* franja de transición en ángulo, nueva */
+
+
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 360px;
+  background: var(--blanco);
+  border-radius: var(--radio);
+  padding: 36px 32px;
+  box-shadow: var(--sombra);
+  border: 1px solid var(--gris-borde);
+}
+
+.login-card-icon {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--azul-claro);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.login-card-icon svg { width: 38px; height: 38px; stroke: var(--blanco); fill: var(--blanco); }
+
+.login-card h2 {
+  text-align: center;
+  font-size: 20px;
+  letter-spacing: .5px;
+  color: #1c2530;
+}
+
+.login-card > p.subtitle {
+  text-align: center;
+  font-size: 13px;
+  color: var(--gris-claro);
+  margin-top: 4px;
+  margin-bottom: 24px;
+}
+
+.field {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.field svg.leading {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  stroke: var(--azul-claro);
+}
+
+.field input {
+  width: 100%;
+  padding: 13px 14px 13px 42px;
+  border: 1.5px solid var(--gris-borde);
+  border-radius: 10px;
+  background: #fbfcff;
+  outline: none;
+  transition: border-color .15s ease;
+}
+
+.field input:focus {
+  border-color: var(--azul-claro);
+}
+
+.field .toggle-eye {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  stroke: var(--gris-claro);
+  cursor: pointer;
+  background: none;
+}
+
+.remember-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--gris-texto);
+  margin-bottom: 20px;
+}
+
+.remember-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--azul-claro);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  background: var(--azul-claro);
+  color: var(--blanco);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: .3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background .15s ease;
+}
+
+.btn-primary:hover { background: var(--azul-hover); }
+.btn-primary svg { width: 16px; height: 16px; fill: var(--blanco); }
+
+.divider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0;
+  color: var(--gris-claro);
+  font-size: 12px;
+}
+
+.divider-row::before,
+.divider-row::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gris-borde);
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  background: var(--blanco);
+  border: 1.5px solid var(--azul-claro);
+  color: var(--azul-claro);
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-secondary:hover { background: var(--azul-pastel); }
+.btn-secondary svg { width: 18px; height: 18px; stroke: var(--azul-claro); }
+
+.login-footer {
+  text-align: center;
+  font-size: 11px;
+  color: var(--gris-claro);
+  margin-top: 22px;
+}
+
+@media (max-width: 860px) {
+  .login-wrapper { flex-direction: column; }
+  .login-brand { padding: 40px 24px; }
+  .login-form-side { padding: 30px 20px; }
+}

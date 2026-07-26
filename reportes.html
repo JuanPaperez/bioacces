@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reportes | BioAccess</title>
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/app-shell.css">
+<link rel="stylesheet" href="css/registro.css">
+<link rel="stylesheet" href="css/reportes.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ================= Topbar ================= -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <img class="logo-inpec" src="assets/logo-inpec.png" alt="Logo INPEC">
+      <div class="topbar-brand-text">
+        <h1>SISTEMA DE CONTROL DE ACCESO</h1>
+        <p>AUTENTICACIÓN BIOMÉTRICA</p>
+      </div>
+    </div>
+
+    <div class="topbar-devs">
+      <strong>Desarrollado por:</strong>
+      Juan Camilo Zapata · Juan Pablo Perez · Astrid Madrigal Torres
+    </div>
+
+    <div class="topbar-profile">
+      <div class="avatar">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7v1H4v-1z"/>
+        </svg>
+      </div>
+      <div class="who">
+        <strong>Administrador</strong>
+        <span>Rol: Administrador</span>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+  </header>
+
+  <div class="app-body">
+
+    <!-- ================= Sidebar ================= -->
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <a href="registro.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Registro de Accesos
+        </a>
+        <a href="usuarios.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+          Usuarios
+        </a>
+        <a href="reportes.html" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Reportes
+        </a>
+        <a href="configuracion.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          Configuración
+        </a>
+      </nav>
+
+      <div class="sidebar-spacer"></div>
+
+      <nav class="sidebar-nav">
+        <a href="index.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Cierre de Sesión
+        </a>
+      </nav>
+
+      <div class="sidebar-fingerprint">
+        <img src="assets/logo-huella.png" alt="Huella digital">
+      </div>
+    </aside>
+
+    <!-- ================= Contenido ================= -->
+    <main class="content">
+      <h2 class="page-title">REPORTES</h2>
+
+      <!-- Filtros con etiqueta -->
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label class="group-label">Fecha desde</label>
+          <label class="filter-input">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <input type="date" value="2026-07-01">
+          </label>
+        </div>
+
+        <div class="filter-group">
+          <label class="group-label">Fecha hasta</label>
+          <label class="filter-input">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <input type="date" value="2026-07-09">
+          </label>
+        </div>
+
+        <div class="filter-group">
+          <label class="group-label">Usuario</label>
+          <label class="filter-input">
+            <select><option>Todos los usuarios</option></select>
+          </label>
+        </div>
+
+        <div class="filter-group">
+          <label class="group-label">Rol</label>
+          <label class="filter-input">
+            <select>
+              <option>Todos los roles</option>
+              <option>Administrador</option>
+              <option>Funcionario</option>
+              <option>Visitante</option>
+              <option>Vigilancia</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="filter-group">
+          <label class="group-label">Estado</label>
+          <label class="filter-input">
+            <select>
+              <option>Todos</option>
+              <option>Permitido</option>
+              <option>Denegado</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="filters-actions">
+        <label class="filter-input filter-search" style="max-width:280px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Buscar...">
+        </label>
+
+        <button class="btn-filtrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Filtrar
+        </button>
+
+        <button class="btn-ghost">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>
+          Limpiar filtros
+        </button>
+
+        <div class="spacer"></div>
+
+        <button class="btn-ghost">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar excel
+        </button>
+
+        <button class="btn-ghost">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Imprimir
+        </button>
+      </div>
+
+      <!-- Tabla -->
+      <div class="table-card">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Usuario</th>
+                <th>Documento</th>
+                <th>Rol</th>
+                <th>Tipo de Acceso</th>
+                <th>Estado</th>
+                <th>Código de registro</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>10/07/2026</td><td>06:48:15 a.m.</td><td>Juan Camilo Zapata</td><td>1.234.567.890</td><td>Administrador</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00001</td></tr>
+              <tr><td>2</td><td>10/07/2026</td><td>06:40:33 a.m.</td><td>Astrid Madrigal Torres</td><td>1.098.765.432</td><td>Funcionario</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00002</td></tr>
+              <tr><td>3</td><td>10/07/2026</td><td>07:35:23 a.m.</td><td>Carlos Pérez</td><td>1.112.223.334</td><td>Funcionario</td><td>Huella Digital</td><td><span class="badge denegado">DENEGADO</span></td><td>ACC-00003</td></tr>
+              <tr><td>4</td><td>10/07/2026</td><td>06:30:14 a.m.</td><td>María Gómez</td><td>1.234.556.677</td><td>Vigilancia</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00004</td></tr>
+              <tr><td>5</td><td>10/07/2026</td><td>06:53:43 a.m.</td><td>Pedro Rodríguez</td><td>1.009.887.766</td><td>Funcionario</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00005</td></tr>
+              <tr><td>6</td><td>10/07/2026</td><td>07:09:10 a.m.</td><td>Laura Torres</td><td>1.223.445.566</td><td>Funcionario</td><td>Huella Digital</td><td><span class="badge denegado">DENEGADO</span></td><td>ACC-00006</td></tr>
+              <tr><td>7</td><td>10/07/2026</td><td>06:55:09 a.m.</td><td>Camilo Ruiz</td><td>1.334.566.778</td><td>Funcionario</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00007</td></tr>
+              <tr><td>8</td><td>10/07/2026</td><td>06:32:07 a.m.</td><td>Andrés Felipe Ramírez</td><td>1.287.943.615</td><td>Administrativos</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00008</td></tr>
+              <tr><td>9</td><td>10/07/2026</td><td>06:20:45 a.m.</td><td>Valentina Gómez Castaño</td><td>1.156.842.397</td><td>Vigilancia</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00009</td></tr>
+              <tr><td>10</td><td>10/07/2026</td><td>06:50:53 a.m.</td><td>Sebastián Herrera López</td><td>1.402.781.954</td><td>Funcionario</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00010</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer reportes-footer">
+          <span class="showing">Mostrando 1 a 10 de 250 registros</span>
+          <div class="pagination">
+            <button>«</button>
+            <button>‹</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <span class="dots">....</span>
+            <button>16</button>
+            <button>›</button>
+            <button>»</button>
+          </div>
+          <div class="per-page">
+            Registros por página
+            <select>
+              <option>10</option>
+              <option>25</option>
+              <option>50</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

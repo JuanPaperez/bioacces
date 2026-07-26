@@ -1,0 +1,100 @@
+/* ============================================================
+   BioAccess - Sistema de Control de Acceso
+   Hoja de estilos base (compartida por todas las pantallas)
+   ============================================================ */
+
+:root {
+  /* Colores principales (tomados de la maquetación) */
+  --azul-oscuro: #0b1f3f;      /* fondo panel izquierdo / sidebar / topbar */
+  --azul-oscuro-2: #10294f;
+  --azul-medio: #1c4e9c;       /* acentos, botones */
+  --azul-claro: #2f6fed;       /* botones, links, bordes activos */
+  --azul-hover: #1a56c4;
+  --azul-pastel: #eaf2ff;      /* fondos suaves de inputs / franjas */
+  --blanco: #ffffff;
+  --gris-texto: #4b5563;
+  --gris-claro: #94a3b8;
+  --gris-borde: #d7dde8;
+  --gris-fondo: #f4f6fb;
+  --verde: #17b26a;            /* PERMITIDO / ACTIVO */
+  --verde-fondo: #e5f9ee;
+  --rojo: #e63946;             /* DENEGADO / INACTIVO */
+  --rojo-fondo: #fdeaec;
+  --naranja: #f59e0b;          /* Pendiente */
+  --naranja-fondo: #fef3e2;
+  --sombra: 0 10px 30px rgba(11, 31, 63, 0.15);
+  --radio: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', 'Poppins', Arial, sans-serif;
+  color: #1c2530;
+  background: var(--gris-fondo);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+
+a { text-decoration: none; color: inherit; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+}
+
+input, select {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+/* Utilidades genéricas reutilizadas en varias pantallas */
+
+.badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .3px;
+  text-align: center;
+}
+
+.badge.permitido,
+.badge.activo,
+.badge.aprobado {
+  background: var(--verde-fondo);
+  color: var(--verde);
+}
+
+.badge.denegado,
+.badge.inactivo {
+  background: var(--rojo-fondo);
+  color: var(--rojo);
+}
+
+.badge.pendiente {
+  background: var(--naranja-fondo);
+  color: var(--naranja);
+}
+
+.icon-btn {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: transparent;
+}
+
+.icon-btn:hover { background: var(--azul-pastel); }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--gris-borde); border-radius: 8px; }

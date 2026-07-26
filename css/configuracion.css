@@ -1,0 +1,233 @@
+/* ============================================================
+   Pantalla: Configuración
+   ============================================================ */
+
+.config-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .config-grid { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: var(--blanco);
+  border: 1px solid var(--gris-borde);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--azul-claro);
+  margin-bottom: 16px;
+}
+
+.panel-title svg { width: 18px; height: 18px; stroke: var(--azul-claro); }
+
+/* ---------- Tarjeta de horario actual del usuario ---------- */
+
+.current-schedule {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid var(--gris-borde);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.current-schedule .avatar-lg {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--azul-pastel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.current-schedule .avatar-lg svg { width: 26px; height: 26px; stroke: var(--azul-claro); }
+
+.current-schedule .info { flex: 1; }
+.current-schedule .info h4 { font-size: 15px; margin-bottom: 4px; }
+.current-schedule .info p { font-size: 12.5px; color: var(--gris-claro); margin-bottom: 2px; }
+.current-schedule .info p strong { color: #33404f; font-weight: 600; }
+
+.schedule-chip {
+  display: inline-block;
+  background: var(--azul-pastel);
+  color: var(--azul-claro);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-top: 4px;
+}
+
+/* ---------- Barra de acciones (Agregar/Modificar/Eliminar/Actualizar) ---------- */
+
+.actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.actions-bar .filter-search { flex: 1; min-width: 160px; }
+
+.btn-sm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 9px;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1.5px solid var(--gris-borde);
+  background: var(--blanco);
+  color: var(--gris-texto);
+}
+
+.btn-sm svg { width: 14px; height: 14px; stroke: currentColor; }
+.btn-sm:hover { background: var(--gris-fondo); }
+
+.btn-sm.primary { background: var(--azul-claro); border-color: var(--azul-claro); color: var(--blanco); }
+.btn-sm.primary:hover { background: var(--azul-hover); }
+
+/* ---------- Tabla pequeña dentro de los paneles ---------- */
+
+.table-mini { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+
+.table-mini thead th {
+  background: var(--azul-pastel);
+  color: #1c3d75;
+  text-align: left;
+  font-weight: 700;
+  padding: 10px 12px;
+  white-space: nowrap;
+}
+
+.table-mini tbody td {
+  padding: 10px 12px;
+  border-top: 1px solid var(--gris-borde);
+  color: #33404f;
+  white-space: nowrap;
+}
+
+.table-mini-wrap { overflow-x: auto; margin-bottom: 4px; }
+
+/* ---------- Panel administrador (columna derecha) ---------- */
+
+.admin-list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.admin-list-row.selected { background: var(--azul-claro); color: var(--blanco); }
+.admin-list-row:not(.selected):hover { background: var(--gris-fondo); }
+
+.admin-list-row .name { font-weight: 600; }
+.admin-list-row .user { color: inherit; opacity: .8; }
+
+/* ---------- Formulario del administrador seleccionado ---------- */
+
+.form-field { margin-bottom: 14px; }
+
+.form-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gris-texto);
+  margin-bottom: 6px;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--gris-borde);
+  border-radius: 9px;
+  font-size: 13px;
+  background: #fbfcff;
+  outline: none;
+}
+
+.form-field input:focus,
+.form-field select:focus { border-color: var(--azul-claro); }
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.btn-danger-outline {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1.5px solid var(--rojo);
+  color: var(--rojo);
+  background: var(--blanco);
+  border-radius: 9px;
+  padding: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.btn-danger-outline:hover { background: var(--rojo-fondo); }
+
+.btn-outline {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1.5px solid var(--gris-borde);
+  color: var(--gris-texto);
+  background: var(--blanco);
+  border-radius: 9px;
+  padding: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.btn-outline:hover { background: var(--gris-fondo); }
+.btn-outline svg, .btn-danger-outline svg { width: 14px; height: 14px; stroke: currentColor; }
+
+.btn-guardar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  background: var(--azul-oscuro);
+  color: var(--blanco);
+  border: none;
+  border-radius: 10px;
+  padding: 12px 22px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.btn-guardar:hover { background: var(--azul-oscuro-2); }
+.btn-guardar svg { width: 16px; height: 16px; stroke: var(--blanco); }
+
+.btn-guardar-row { display: flex; margin-top: 10px; }
