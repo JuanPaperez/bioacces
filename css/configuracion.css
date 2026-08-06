@@ -4,7 +4,7 @@
 
 .config-grid {
   display: grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: 1fr;
   gap: 20px;
   align-items: start;
 }
@@ -231,3 +231,65 @@
 .btn-guardar svg { width: 16px; height: 16px; stroke: var(--blanco); }
 
 .btn-guardar-row { display: flex; margin-top: 10px; }
+
+/* ============================================================
+   Modal: Administrador del sistema
+   ============================================================ */
+
+.btn-open-admin {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--azul-claro);
+  color: var(--blanco);
+  border: none;
+  border-radius: 10px;
+  padding: 11px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.btn-open-admin:hover { background: var(--azul-hover); }
+.btn-open-admin svg { width: 16px; height: 16px; stroke: var(--blanco); }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 31, 63, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 1000;
+}
+
+.modal-overlay.hidden { display: none; }
+
+.modal-box {
+  position: relative;
+  background: var(--blanco);
+  border-radius: 16px;
+  padding: 28px 26px;
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--sombra);
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover { background: var(--gris-fondo); }
+.modal-close svg { width: 18px; height: 18px; stroke: var(--gris-texto); }

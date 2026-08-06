@@ -219,9 +219,133 @@
         </div>
       </div>
 
+      <!-- Estadísticas + gráfica -->
+      <div class="reportes-bottom">
+
+        <div class="stat-card">
+          <div class="stat-icon ingreso">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </div>
+          <div class="stat-info">
+            <p class="label">Total de ingreso</p>
+            <p class="value">75</p>
+            <p class="delta positiva">↑ 12% vs periodo anterior</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon salida">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 7 21 12 16 17"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </div>
+          <div class="stat-info">
+            <p class="label">Total de salida</p>
+            <p class="value">68</p>
+            <p class="delta positiva">↑ 8% vs periodo anterior</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon permitidos">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="stat-info">
+            <p class="label">Accesos permitidos</p>
+            <p class="value">143</p>
+            <p class="delta positiva">↑ 15% vs periodo anterior</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon denegados">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </div>
+          <div class="stat-info">
+            <p class="label">Accesos denegados</p>
+            <p class="value">7</p>
+            <p class="delta negativa">↓ 5% vs periodo anterior</p>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h4>Accesos permitidos vs. denegados — últimos días</h4>
+          <div class="chart-wrap">
+            <canvas id="graficaAccesos"></canvas>
+          </div>
+          <div class="chart-legend">
+            <span><i class="dot verde"></i> Accesos Permitidos</span>
+            <span><i class="dot roja"></i> Accesos Denegados</span>
+          </div>
+        </div>
+
+      </div>
+
     </main>
   </div>
 </div>
+
+<script src="assets/js/chart.umd.js"></script>D
+<script>
+  const ctx = document.getElementById('graficaAccesos');
+
+new Chart(ctx, {
+  type: 'bar', // Cambiado a barras como el PDF
+  data: {
+    labels: ['10 Jul', '11 Jul', '12 Jul', '13 Jul', '14 Jul', '15 Jul', '16 Jul'],
+    datasets: [
+      {
+        label: 'Accesos Permitidos',
+        // Datos calcados de las barras del PDF
+        data: [31, 28, 30, 27, 24, 30, 15],
+        backgroundColor: '#10b981', // Verde exacto
+        borderRadius: 3,
+        barPercentage: 0.5,
+        categoryPercentage: 0.6
+      },
+      {
+        label: 'Accesos Denegados',
+        // Datos calcados de las barras del PDF
+        data: [10, 5, 10, 7, 7, 5, 0],
+        backgroundColor: '#ef4444', // Rojo exacto
+        borderRadius: 3,
+        barPercentage: 0.5,
+        categoryPercentage: 0.6
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false // Usamos la leyenda HTML propia que ya creaste en la tarjeta
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 40, // Límite máximo según el prototipo en PDF
+        ticks: {
+          stepSize: 5, // Escala de 5 en 5 (0, 5, 10, 15... 40)
+          color: '#64748b',
+          font: { size: 10 }
+        },
+        grid: {
+          color: '#f1f5f9'
+        }
+      },
+      x: {
+        ticks: {
+          color: '#64748b',
+          font: { size: 10 }
+        },
+        grid: {
+          display: false
+        }
+      }
+    }
+  }
+});
+</script>
 
 </body>
 </html>
