@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiosco de Ingreso | BioAccess</title>
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/kiosco.css">
+</head>
+<body>
+
+<div class="kiosco-wrapper">
+
+  <a href="registro.html" class="kiosco-exit">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+    Salir del kiosco
+  </a>
+
+  <div class="kiosco-logo">
+    <img src="assets/logo-inpec.png" alt="Logo INPEC">
+  </div>
+
+  <h1 class="kiosco-title">KIOSCO DE INGRESO BIOMÉTRICO</h1>
+  <p class="kiosco-subtitle">SISTEMA DE CONTROL DE ACCESO — INPEC</p>
+
+  <!-- ================= Estado 1: esperando huella ================= -->
+  <button type="button" class="kiosco-scan-area" id="zonaEscaneo" onclick="simularEscaneo()">
+    <div class="kiosco-fingerprint-circle">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round">
+        <path d="M12 2a7 7 0 0 0-7 7c0 4 1 6 1 9"/>
+        <path d="M12 2a7 7 0 0 1 7 7c0 3 .3 5-1 8"/>
+        <path d="M9 5.5a6 6 0 0 1 6 0"/>
+        <path d="M6 6.5C6 6.5 4.5 8 4.5 11c0 3.5 1 5 1 7.5"/>
+        <path d="M12 6a5 5 0 0 1 5 5c0 3.5.5 5.5 1.5 7"/>
+        <path d="M12 9a2.5 2.5 0 0 1 2.5 2.5c0 3 .5 5 1.5 7"/>
+        <path d="M9.5 9.5A2.5 2.5 0 0 1 12 12c0 3.5.7 5.5 2 7.5"/>
+      </svg>
+    </div>
+    <p class="kiosco-instruction">
+      Coloque su huella para registrar su ingreso
+      <span>(clic aquí para simular una lectura de huella)</span>
+    </p>
+  </button>
+
+  <!-- ================= Estado 2: resultado ================= -->
+  <div class="kiosco-result hidden" id="resultado">
+    <div class="kiosco-result-icon" id="resultadoIcono">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" id="resultadoIconoSvg"></svg>
+    </div>
+    <p class="kiosco-result-name" id="resultadoNombre">—</p>
+    <p class="kiosco-result-message" id="resultadoMensaje">—</p>
+
+    <div class="kiosco-result-details">
+      <div>
+        <p class="label">Fecha</p>
+        <p class="value" id="resultadoFecha">—</p>
+      </div>
+      <div>
+        <p class="label">Hora de entrada</p>
+        <p class="value" id="resultadoHora">—</p>
+      </div>
+    </div>
+
+    <button type="button" class="kiosco-result-retry" onclick="reiniciarKiosco()">Registrar otro ingreso</button>
+  </div>
+
+  <p class="kiosco-clock" id="relojEnVivo">Cargando hora...</p>
+
+</div>
+
+<script>
+  // Reloj en vivo, esquina inferior — solo referencia visual, no depende de nada externo
+  function actualizarReloj() {
+    const ahora = new Date();
+    const opciones = { weekday: 'long', day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    document.getElementById('relojEnVivo').textContent =
+      ahora.toLocaleDateString('es-CO', opciones).toUpperCase();
+  }
+  actualizarReloj();
+  setInterval(actualizarReloj, 1000);
+
+  // ------------------------------------------------------------------
+  // DEMO: como todavía no está conectado a Python + MySQL, simulamos
+  // 3 escenarios distintos cada vez que se hace clic, en este orden:
+  // 1) Ingreso a tiempo (verde)  2) Ingreso tarde (rojo)  3) Huella no reconocida (rojo)
+  // Cuando se conecte el backend, esta función se reemplaza por la
+  // respuesta real del lector biométrico + la consulta a la base de datos.
+  // ------------------------------------------------------------------
+  const ejemplos = [
+    { ok: true,  nombre: 'Juan Pablo Pérez',    hora: '06:58:12 a.m.', tarde: false },
+    { ok: true,  nombre: 'Astrid Madrigal Torres', hora: '07:24:40 a.m.', tarde: true  },
+    { ok: false, nombre: null,                   hora: null,            tarde: false }
+  ];
+  let indiceDemo = 0;
+
+  function simularEscaneo() {
+    const ejemplo = ejemplos[indiceDemo % ejemplos.length];
+    indiceDemo++;
+
+    document.getElementById('zonaEscaneo').classList.add('hidden');
+    document.getElementById('resultado').classList.remove('hidden');
+
+    const icono = document.getElementById('resultadoIcono');
+    const iconoSvg = document.getElementById('resultadoIconoSvg');
+    const nombre = document.getElementById('resultadoNombre');
+    const mensaje = document.getElementById('resultadoMensaje');
+    const fecha = document.getElementById('resultadoFecha');
+    const hora = document.getElementById('resultadoHora');
+
+    const hoy = new Date().toLocaleDateString('es-CO');
+
+    if (!ejemplo.ok) {
+      // Huella no reconocida
+      icono.className = 'kiosco-result-icon error';
+      iconoSvg.innerHTML = '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>';
+      nombre.textContent = 'Huella no reconocida';
+      mensaje.className = 'kiosco-result-message error';
+      mensaje.textContent = 'NO INGRESÓ — Vuelva a colocar su huella';
+      fecha.textContent = hoy;
+      hora.textContent = '—';
+      hora.className = 'value';
+    } else if (ejemplo.tarde) {
+      // Ingreso permitido, pero tarde
+      icono.className = 'kiosco-result-icon ok';
+      iconoSvg.innerHTML = '<path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><polyline points="22 4 12 14.01 9 11.01"/>';
+      nombre.textContent = ejemplo.nombre;
+      mensaje.className = 'kiosco-result-message ok';
+      mensaje.textContent = 'INGRESÓ';
+      fecha.textContent = hoy;
+      hora.textContent = ejemplo.hora + ' (tarde)';
+      hora.className = 'value tarde';
+    } else {
+      // Ingreso permitido, a tiempo
+      icono.className = 'kiosco-result-icon ok';
+      iconoSvg.innerHTML = '<path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><polyline points="22 4 12 14.01 9 11.01"/>';
+      nombre.textContent = ejemplo.nombre;
+      mensaje.className = 'kiosco-result-message ok';
+      mensaje.textContent = 'INGRESÓ';
+      fecha.textContent = hoy;
+      hora.textContent = ejemplo.hora;
+      hora.className = 'value a-tiempo';
+    }
+  }
+
+  function reiniciarKiosco() {
+    document.getElementById('resultado').classList.add('hidden');
+    document.getElementById('zonaEscaneo').classList.remove('hidden');
+  }
+</script>
+
+</body>
+</html>
