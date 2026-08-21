@@ -98,7 +98,7 @@
           </div>
         </div>
 
-        <button class="btn-primary-sm">
+        <button class="btn-primary-sm" onclick="abrirModalAgregarUsuario()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Agregar Usuario
         </button>
@@ -121,7 +121,7 @@
           </select>
         </label>
 
-        <button class="btn-ghost" style="margin-left:auto;">
+        <button class="btn-ghost" style="margin-left:auto;" onclick="cargarFuncionarios()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>
           Actualizar
         </button>
@@ -142,105 +142,279 @@
                 <th>Acciones</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>1</td><td>Juan Camilo Zapata</td><td>1.234.567.890</td><td>Administrador</td><td>Registrada</td>
-                <td><span class="badge activo">ACTIVO</span></td>
-                <td>
-                  <div class="row-actions">
-                    <button class="edit" title="Editar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                    <button class="huella" title="Huella"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 0-7 7c0 4 1 6 1 9"/><path d="M12 2a7 7 0 0 1 7 7c0 3 .3 5-1 8"/><path d="M9 5.5a6 6 0 0 1 6 0"/></svg></button>
-                    <button class="delete" title="Eliminar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>2</td><td>Astrid Madrigal Torres</td><td>1.098.765.432</td><td>Funcionario</td><td>Registrada</td>
-                <td><span class="badge activo">ACTIVO</span></td>
-                <td>
-                  <div class="row-actions">
-                    <button class="edit" title="Editar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                    <button class="huella" title="Huella"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 0-7 7c0 4 1 6 1 9"/><path d="M12 2a7 7 0 0 1 7 7c0 3 .3 5-1 8"/><path d="M9 5.5a6 6 0 0 1 6 0"/></svg></button>
-                    <button class="delete" title="Eliminar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>3</td><td>Carlos Pérez</td><td>1.112.223.334</td><td>Funcionario</td><td>Registrada</td>
-                <td><span class="badge inactivo">INACTIVO</span></td>
-                <td>
-                  <div class="row-actions">
-                    <button class="edit" title="Editar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                    <button class="huella" title="Huella"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 0-7 7c0 4 1 6 1 9"/><path d="M12 2a7 7 0 0 1 7 7c0 3 .3 5-1 8"/><path d="M9 5.5a6 6 0 0 1 6 0"/></svg></button>
-                    <button class="delete" title="Eliminar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>4</td><td>María Gómez</td><td>1.234.556.677</td><td>Visitante</td><td>No registrada</td>
-                <td><span class="badge activo">ACTIVO</span></td>
-                <td>
-                  <div class="row-actions">
-                    <button class="edit" title="Editar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                    <button class="huella" title="Huella"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 0-7 7c0 4 1 6 1 9"/><path d="M12 2a7 7 0 0 1 7 7c0 3 .3 5-1 8"/><path d="M9 5.5a6 6 0 0 1 6 0"/></svg></button>
-                    <button class="delete" title="Eliminar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>5</td><td>Pedro Rodríguez</td><td>1.009.887.766</td><td>Funcionario</td><td>Registrada</td>
-                <td><span class="badge activo">ACTIVO</span></td>
-                <td>
-                  <div class="row-actions">
-                    <button class="edit" title="Editar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                    <button class="huella" title="Huella"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 0-7 7c0 4 1 6 1 9"/><path d="M12 2a7 7 0 0 1 7 7c0 3 .3 5-1 8"/><path d="M9 5.5a6 6 0 0 1 6 0"/></svg></button>
-                    <button class="delete" title="Eliminar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>6</td><td>Laura Torres</td><td>1.223.445.566</td><td>Funcionario</td><td>No registrada</td>
-                <td><span class="badge inactivo">INACTIVO</span></td>
-                <td>
-                  <div class="row-actions">
-                    <button class="edit" title="Editar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                    <button class="huella" title="Huella"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 0-7 7c0 4 1 6 1 9"/><path d="M12 2a7 7 0 0 1 7 7c0 3 .3 5-1 8"/><path d="M9 5.5a6 6 0 0 1 6 0"/></svg></button>
-                    <button class="delete" title="Eliminar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>7</td><td>Camilo Ruiz</td><td>1.334.566.778</td><td>Funcionario</td><td>Registrada</td>
-                <td><span class="badge activo">ACTIVO</span></td>
-                <td>
-                  <div class="row-actions">
-                    <button class="edit" title="Editar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                    <button class="huella" title="Huella"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 0-7 7c0 4 1 6 1 9"/><path d="M12 2a7 7 0 0 1 7 7c0 3 .3 5-1 8"/><path d="M9 5.5a6 6 0 0 1 6 0"/></svg></button>
-                    <button class="delete" title="Eliminar"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
-                  </div>
-                </td>
-              </tr>
+            <tbody id="cuerpoTablaUsuarios">
             </tbody>
           </table>
         </div>
 
         <div class="table-footer">
-          <span class="showing">Mostrando 1 a 7 de 250 registros</span>
-          <div class="pagination">
-            <button>«</button>
-            <button class="active">1</button>
-            <button>2</button>
-            <button>3</button>
-            <span class="dots">....</span>
-            <button>32</button>
-            <button>»</button>
+          <span class="showing" id="textoMostrando">Cargando...</span>
+        </div>
+      </div>
+
+      <!-- ================= Modal Agregar Usuario ================= -->
+      <div class="modal-overlay hidden" id="modalAgregarUsuario">
+        <div class="modal-box modal-box-ancho">
+          <button class="modal-close" onclick="cerrarModalAgregarUsuario()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+
+          <div class="modal-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/></svg>
+            <h3>Agregar Usuario</h3>
           </div>
+
+          <form id="formAgregarUsuario" class="modal-body" onsubmit="return guardarNuevoUsuario(event)">
+
+            <div class="form-row">
+              <label>Documento
+                <input type="text" id="campoDocumento" required maxlength="20">
+              </label>
+              <label>Nombres
+                <input type="text" id="campoNombres" required maxlength="100">
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label>Apellidos
+                <input type="text" id="campoApellidos" required maxlength="100">
+              </label>
+              <label>Cargo
+                <input type="text" id="campoCargo" maxlength="80">
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label>Categoría
+                <select id="campoCategoria" required>
+                  <option value="">Seleccione...</option>
+                  <option value="Funcionario">Funcionario</option>
+                  <option value="Visitante">Visitante</option>
+                  <option value="Vigilancia">Vigilancia</option>
+                  <option value="Administrativo">Administrativo</option>
+                </select>
+              </label>
+              <label>Género
+                <select id="campoGenero">
+                  <option value="">Seleccione...</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label>Teléfono
+                <input type="text" id="campoTelefono" maxlength="20">
+              </label>
+              <label>Correo electrónico
+                <input type="email" id="campoCorreo" maxlength="100">
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label>Área
+                <select id="campoArea" required>
+                  <option value="">Cargando áreas...</option>
+                </select>
+              </label>
+              <label>Horario
+                <select id="campoHorario" required>
+                  <option value="">Cargando horarios...</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label>Fecha de ingreso
+                <input type="date" id="campoFechaIngreso" required>
+              </label>
+            </div>
+
+            <label class="form-full">Observaciones
+              <textarea id="campoObservaciones" rows="3" maxlength="255"></textarea>
+            </label>
+
+            <div class="modal-footer">
+              <button type="button" class="btn-ghost" onclick="cerrarModalAgregarUsuario()">Cancelar</button>
+              <button type="submit" class="btn-primary-sm">Guardar Usuario</button>
+            </div>
+
+          </form>
         </div>
       </div>
 
     </main>
   </div>
 </div>
+
+<script>
+  // Se ejecuta apenas termina de cargar pywebview (no antes, porque
+  // window.pywebview.api todavía no existiría).
+  window.addEventListener('pywebviewready', cargarFuncionarios);
+
+  async function cargarFuncionarios() {
+    const resultado = await window.pywebview.api.listar_funcionarios();
+
+    if (!resultado.ok) {
+      alert('No se pudo cargar la lista de usuarios: ' + resultado.error);
+      return;
+    }
+
+    pintarTabla(resultado.datos);
+  }
+
+  function pintarTabla(funcionarios) {
+    const cuerpo = document.getElementById('cuerpoTablaUsuarios');
+    cuerpo.innerHTML = ''; // limpia cualquier fila anterior
+
+    document.getElementById('textoMostrando').textContent =
+      `Mostrando ${funcionarios.length} de ${funcionarios.length} registros`;
+
+    if (funcionarios.length === 0) {
+      cuerpo.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#94a3b8; padding:20px;">No hay usuarios registrados todavía</td></tr>';
+      return;
+    }
+
+    funcionarios.forEach((f, indice) => {
+      const nombreCompleto = `${f.nombres} ${f.apellidos}`;
+      const huella = f.huella_template ? 'Registrada' : 'No registrada';
+      const estadoTexto = f.estado ? 'ACTIVO' : 'INACTIVO';
+      const estadoClase = f.estado ? 'activo' : 'inactivo';
+
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${indice + 1}</td>
+        <td>${nombreCompleto}</td>
+        <td>${f.id_funcionario}</td>
+        <td>${f.categoria ?? '-'}</td>
+        <td>${huella}</td>
+        <td><span class="badge ${estadoClase}">${estadoTexto}</span></td>
+        <td>
+          <div class="row-actions">
+            <button class="edit" title="Editar" onclick="editarFuncionario('${f.id_funcionario}')">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="huella" title="Huella" onclick="gestionarHuella('${f.id_funcionario}')">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 0-7 7c0 4 1 6 1 9"/><path d="M12 2a7 7 0 0 1 7 7c0 3 .3 5-1 8"/><path d="M9 5.5a6 6 0 0 1 6 0"/></svg>
+            </button>
+            <button class="delete" title="Inactivar" onclick="inactivarFuncionario('${f.id_funcionario}')">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            </button>
+          </div>
+        </td>
+      `;
+      cuerpo.appendChild(fila);
+    });
+  }
+
+  // Buscador: cada vez que el usuario escribe, consulta a Python
+  const campoBuscar = document.querySelector('.filter-search input');
+  let temporizador;
+  campoBuscar.addEventListener('input', () => {
+    clearTimeout(temporizador);
+    // Espera un poquito después de que la persona deja de escribir,
+    // para no lanzar una consulta por cada letra.
+    temporizador = setTimeout(async () => {
+      const texto = campoBuscar.value.trim();
+      if (texto === '') {
+        cargarFuncionarios();
+        return;
+      }
+      const resultado = await window.pywebview.api.buscar_funcionarios(texto);
+      if (resultado.ok) pintarTabla(resultado.datos);
+    }, 300);
+  });
+
+  // Estas 3 funciones son "ganchos" para lo que programemos después
+  // (editar, gestionar huella, inactivar) — por ahora solo avisan.
+  function editarFuncionario(id) {
+    alert('Editar funcionario ' + id + ' — pendiente de construir');
+  }
+  function gestionarHuella(id) {
+    alert('Gestionar huella de ' + id + ' — pendiente de construir');
+  }
+  function inactivarFuncionario(id) {
+    alert('Inactivar funcionario ' + id + ' — pendiente de construir');
+  }
+
+  // ============ Modal Agregar Usuario ============
+
+  async function abrirModalAgregarUsuario() {
+    document.getElementById('modalAgregarUsuario').classList.remove('hidden');
+    document.getElementById('formAgregarUsuario').reset();
+    await cargarAreasEnSelect();
+    await cargarHorariosEnSelect();
+  }
+
+  function cerrarModalAgregarUsuario() {
+    document.getElementById('modalAgregarUsuario').classList.add('hidden');
+  }
+
+  async function cargarAreasEnSelect() {
+    const select = document.getElementById('campoArea');
+    const resultado = await window.pywebview.api.listar_areas();
+    if (!resultado.ok) {
+      select.innerHTML = '<option value="">Error al cargar áreas</option>';
+      return;
+    }
+    select.innerHTML = '<option value="">Seleccione...</option>';
+    resultado.datos.forEach(a => {
+      const opcion = document.createElement('option');
+      opcion.value = a.id_area;
+      opcion.textContent = a.nombre_area;
+      select.appendChild(opcion);
+    });
+  }
+
+  async function cargarHorariosEnSelect() {
+    const select = document.getElementById('campoHorario');
+    const resultado = await window.pywebview.api.listar_horarios();
+    if (!resultado.ok) {
+      select.innerHTML = '<option value="">Error al cargar horarios</option>';
+      return;
+    }
+    select.innerHTML = '<option value="">Seleccione...</option>';
+    resultado.datos.forEach(h => {
+      const opcion = document.createElement('option');
+      opcion.value = h.id_horario;
+            opcion.textContent = h.nombre_turno;
+      select.appendChild(opcion);
+    });
+  }
+
+  async function guardarNuevoUsuario(evento) {
+    evento.preventDefault();
+
+    const datos = {
+      id_funcionario: document.getElementById('campoDocumento').value.trim(),
+      nombres: document.getElementById('campoNombres').value.trim(),
+      apellidos: document.getElementById('campoApellidos').value.trim(),
+      cargo: document.getElementById('campoCargo').value.trim(),
+      categoria: document.getElementById('campoCategoria').value,
+      genero: document.getElementById('campoGenero').value,
+      telefono: document.getElementById('campoTelefono').value.trim(),
+      correo_electronico: document.getElementById('campoCorreo').value.trim(),
+      id_area: document.getElementById('campoArea').value,
+      id_horario: document.getElementById('campoHorario').value,
+      fecha_ingreso: document.getElementById('campoFechaIngreso').value,
+      observaciones: document.getElementById('campoObservaciones').value.trim()
+    };
+
+    const resultado = await window.pywebview.api.agregar_funcionario(datos);
+
+    if (!resultado.ok) {
+      alert('No se pudo guardar el usuario: ' + resultado.error);
+      return false;
+    }
+
+    alert(resultado.mensaje);
+    cerrarModalAgregarUsuario();
+    cargarFuncionarios(); // refresca la tabla con el nuevo usuario
+    return false;
+  }
+</script>
 
 </body>
 </html>

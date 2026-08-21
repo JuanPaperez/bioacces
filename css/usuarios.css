@@ -91,3 +91,97 @@
 .row-actions .delete:hover { background: var(--rojo-fondo); }
 
 .row-actions svg { stroke: currentColor; fill: none; }
+
+/* ============================================================
+   Modal: Agregar Usuario
+   ============================================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 31, 63, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 1000;
+}
+
+.modal-overlay.hidden { display: none; }
+
+.modal-box {
+  position: relative;
+  background: var(--blanco);
+  border-radius: 16px;
+  padding: 28px 26px;
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--sombra);
+}
+
+.modal-box-ancho { max-width: 620px; }
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover { background: var(--gris-fondo); }
+.modal-close svg { width: 18px; height: 18px; stroke: var(--gris-texto); }
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.modal-header svg { width: 20px; height: 20px; stroke: var(--azul-claro); }
+.modal-header h3 { font-size: 17px; color: var(--azul-oscuro); margin: 0; }
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-row { display: flex; gap: 16px; }
+
+.form-row label, .form-full {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--gris-texto);
+  flex: 1;
+}
+
+.form-row input, .form-row select, .form-full textarea {
+  border: 1px solid var(--gris-borde);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.form-row input:focus, .form-row select:focus, .form-full textarea:focus {
+  outline: none;
+  border-color: var(--azul-claro);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
