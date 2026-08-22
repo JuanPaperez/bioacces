@@ -1,13 +1,13 @@
 """
-modelos/funcionario.py
-------------------------
-Este archivo contiene TODAS las consultas SQL relacionadas con la
-tabla `funcionarios`. Ningún otro archivo debe escribir un "SELECT"
-o un "INSERT" sobre esta tabla directamente — siempre deben pasar
-por una función de aquí.
+#modelos/funcionario.py
+#------------------------
+#Este archivo contiene TODAS las consultas SQL relacionadas con la
+#tabla `funcionarios`. Ningún otro archivo debe escribir un "SELECT"
+#o un "INSERT" sobre esta tabla directamente — siempre deben pasar
+#por una función de aquí.
 
-Por ahora solo tiene listar y buscar. Las funciones de agregar,
-editar e inactivar las agregamos en el siguiente paso.
+#Por ahora solo tiene listar y buscar. Las funciones de agregar,
+#editar e inactivar las agregamos en el siguiente paso.
 """
 
 from database.conexion import obtener_conexion
@@ -141,3 +141,34 @@ def crear_funcionario(datos):
     conexion.close()
 
     return id_creado
+
+def cambiar_estado_funcionario(id_funcionario, nuevo_estado):
+    """
+    Cambia el estado de un funcionario a ACTIVO o INACTIVO
+    (NUNCA lo borra físicamente de la base de datos, para no
+    perder su historial de asistencias, accesos y permisos).
+
+    'nuevo_estado' llega desde JS como el texto "ACTIVO" o "INACTIVO".
+    Devuelve True si se actualizó una fila, False si no se encontró
+    el id_funcionario.
+    """
+    conexion = obtener_conexion()
+    cursor = conexion.cursor()
+
+    valor_estado = 1 if nuevo_estado == "ACTIVO" else 0
+
+    consulta = """
+        UPDATE funcionarios
+        SET estado = %s
+        WHERE id_funcionario = %s
+    """
+
+    cursor.execute(consulta, (valor_estado, id_funcionario))
+    conexion.commit()
+
+    filas_afectadas = cursor.rowcount
+
+    cursor.close()
+    conexion.close()
+
+    return filas_afectadas > 0

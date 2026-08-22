@@ -244,7 +244,22 @@
           </form>
         </div>
       </div>
+<!-- ================= Modal Confirmación (reutilizable) ================= -->
+<div class="modal-overlay hidden" id="modalConfirmacion">
+  <div class="modal-box">
+    <div class="modal-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <h3 id="tituloConfirmacion">Confirmar acción</h3>
+    </div>
 
+    <p id="mensajeConfirmacion" style="color: var(--gris-texto); font-size: 14px; margin-bottom: 22px;"></p>
+
+    <div class="modal-footer">
+      <button type="button" class="btn-ghost" id="btnCancelarConfirmacion">Cancelar</button>
+      <button type="button" class="btn-primary-sm" id="btnAceptarConfirmacion">Aceptar</button>
+    </div>
+  </div>
+</div>
     </main>
   </div>
 </div>
@@ -335,8 +350,22 @@
   function gestionarHuella(id) {
     alert('Gestionar huella de ' + id + ' — pendiente de construir');
   }
-  function inactivarFuncionario(id) {
-    alert('Inactivar funcionario ' + id + ' — pendiente de construir');
+      async function inactivarFuncionario(id) {
+    const confirmado = await mostrarConfirmacion(
+      'No se elimina su información ni su historial, solo deja de aparecer como activo.',
+      '¿Seguro que deseas inactivar a este usuario?'
+    );
+    if (!confirmado) return;
+
+    const resultado = await window.pywebview.api.cambiar_estado_funcionario(id, 'INACTIVO');
+
+    if (!resultado.ok) {
+      alert('No se pudo inactivar el usuario: ' + resultado.error);
+      return;
+    }
+
+    alert(resultado.mensaje);
+    cargarFuncionarios();
   }
 
   // ============ Modal Agregar Usuario ============
@@ -351,6 +380,34 @@
   function cerrarModalAgregarUsuario() {
     document.getElementById('modalAgregarUsuario').classList.add('hidden');
   }
+    // ============ Modal de Confirmación (reutilizable) ============
+  // Uso: const confirmado = await mostrarConfirmacion("¿Seguro...?");
+  // Devuelve true si el usuario dio clic en Aceptar, false si canceló o cerró.
+
+  function mostrarConfirmacion(mensaje, titulo = 'Confirmar acción') {
+    return new Promise((resolver) => {
+      const overlay = document.getElementById('modalConfirmacion');
+      document.getElementById('tituloConfirmacion').textContent = titulo;
+      document.getElementById('mensajeConfirmacion').textContent = mensaje;
+      overlay.classList.remove('hidden');
+
+      const btnAceptar = document.getElementById('btnAceptarConfirmacion');
+      const btnCancelar = document.getElementById('btnCancelarConfirmacion');
+
+      function cerrar(resultado) {
+        overlay.classList.add('hidden');
+        btnAceptar.removeEventListener('click', aceptar);
+        btnCancelar.removeEventListener('click', cancelar);
+        resolver(resultado);
+      }
+      function aceptar() { cerrar(true); }
+      function cancelar() { cerrar(false); }
+
+      btnAceptar.addEventListener('click', aceptar);
+      btnCancelar.addEventListener('click', cancelar);
+    });
+  }
+
 
   async function cargarAreasEnSelect() {
     const select = document.getElementById('campoArea');
