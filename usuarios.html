@@ -25,7 +25,7 @@
 
     <div class="topbar-devs">
       <strong>Desarrollado por:</strong>
-      Juan Camilo Zapata · Juan Pablo Perez · Astrid Madrigal Torres
+      Juan Camilo Zapata · Juan Pablo Perez · Astrid Madrigal Torres · Eliam Padilla
     </div>
 
     <div class="topbar-profile">
@@ -111,13 +111,12 @@
           <input type="text" placeholder="Buscar usuario, Documento...">
         </label>
 
-        <label class="filter-input">
-          <select>
-            <option>Todos los roles</option>
-            <option>Administrador</option>
-            <option>Funcionario</option>
-            <option>Visitante</option>
-            <option>Vigilancia</option>
+                <label class="filter-input">
+          <select id="filtroCategoria" onchange="aplicarFiltroCategoria()">
+            <option value="">Todos los roles</option>
+            <option value="Funcionario">Funcionario</option>
+            <option value="Vigilancia">Vigilancia</option>
+            <option value="Administrativo">Administrativo</option>
           </select>
         </label>
 
@@ -392,12 +391,24 @@
        await mostrarAviso('No se pudo cargar la lista de usuarios: ' + resultado.error, 'Error');
       return;
     }
+    funcionariosSinFiltrar = resultado.datos;
+    aplicarFiltroCategoria();
 
     pintarTabla(resultado.datos);
+  }
+    function aplicarFiltroCategoria() {
+    const categoriaSeleccionada = document.getElementById('filtroCategoria').value;
+
+    const filtrados = categoriaSeleccionada === ''
+      ? funcionariosSinFiltrar
+      : funcionariosSinFiltrar.filter(f => f.categoria === categoriaSeleccionada);
+
+    pintarTabla(filtrados);
   }
 
     const FUNCIONARIOS_POR_PAGINA = 10;
   let funcionariosCompletos = [];
+  let funcionariosSinFiltrar = [];  // ← nueva: guarda TODOS antes de aplicar el filtro
   let paginaActual = 1;
 
   function pintarTabla(funcionarios) {
@@ -503,10 +514,8 @@
   // Buscador: cada vez que el usuario escribe, consulta a Python
   const campoBuscar = document.querySelector('.filter-search input');
   let temporizador;
-  campoBuscar.addEventListener('input', () => {
+    campoBuscar.addEventListener('input', () => {
     clearTimeout(temporizador);
-    // Espera un poquito después de que la persona deja de escribir,
-    // para no lanzar una consulta por cada letra.
     temporizador = setTimeout(async () => {
       const texto = campoBuscar.value.trim();
       if (texto === '') {
@@ -514,7 +523,10 @@
         return;
       }
       const resultado = await window.pywebview.api.buscar_funcionarios(texto);
-      if (resultado.ok) pintarTabla(resultado.datos);
+      if (resultado.ok) {
+        funcionariosSinFiltrar = resultado.datos;
+        aplicarFiltroCategoria();
+      }
     }, 300);
   });
     // Compara Documento y Confirmar Documento en tiempo real
