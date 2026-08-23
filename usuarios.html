@@ -146,11 +146,11 @@
             </tbody>
           </table>
         </div>
-
-        <div class="table-footer">
+      <!-- ================= Paginacion Usuarios ================= -->
+                <div class="table-footer">
           <span class="showing" id="textoMostrando">Cargando...</span>
+          <div class="pagination" id="contenedorPaginacion"></div>
         </div>
-      </div>
 
       <!-- ================= Modal Agregar Usuario ================= -->
       <div class="modal-overlay hidden" id="modalAgregarUsuario">
@@ -164,84 +164,91 @@
             <h3>Agregar Usuario</h3>
           </div>
 
-          <form id="formAgregarUsuario" class="modal-body" onsubmit="return guardarNuevoUsuario(event)">
+              <form id="formAgregarUsuario" class="modal-body" onsubmit="return guardarNuevoUsuario(event)">
 
-            <div class="form-row">
-              <label>Documento
-                <input type="text" id="campoDocumento" required maxlength="20">
-              </label>
-              <label>Nombres
-                <input type="text" id="campoNombres" required maxlength="100">
-              </label>
-            </div>
+      <div class="form-row">
+        <label>Documento
+          <input type="text" id="campoDocumento" required maxlength="20">
+        </label>
+        <label>Confirmar Documento
+          <input type="text" id="campoConfirmarDocumento" required maxlength="20">
+        </label>
+      </div>
 
-            <div class="form-row">
-              <label>Apellidos
-                <input type="text" id="campoApellidos" required maxlength="100">
-              </label>
-              <label>Cargo
-                <input type="text" id="campoCargo" maxlength="80">
-              </label>
-            </div>
+      <div style="text-align:center; margin-top:-8px;">
+        <span id="textoCoincidenciaDocumento" style="font-size:13px; font-weight:600;"></span>
+      </div>
 
-            <div class="form-row">
-              <label>Categoría
-                <select id="campoCategoria" required>
-                  <option value="">Seleccione...</option>
-                  <option value="Funcionario">Funcionario</option>
-                  <option value="Visitante">Visitante</option>
-                  <option value="Vigilancia">Vigilancia</option>
-                  <option value="Administrativo">Administrativo</option>
-                </select>
-              </label>
-              <label>Género
-                <select id="campoGenero">
-                  <option value="">Seleccione...</option>
-                  <option value="Masculino">Masculino</option>
-                  <option value="Femenino">Femenino</option>
-                  <option value="Otro">Otro</option>
-                </select>
-              </label>
-            </div>
+      <div class="form-row">
+        <label>Nombres
+          <input type="text" id="campoNombres" required maxlength="100">
+        </label>
+        <label>Apellidos
+          <input type="text" id="campoApellidos" required maxlength="100">
+        </label>
+      </div>
 
-            <div class="form-row">
-              <label>Teléfono
-                <input type="text" id="campoTelefono" maxlength="20">
-              </label>
-              <label>Correo electrónico
-                <input type="email" id="campoCorreo" maxlength="100">
-              </label>
-            </div>
+      <div class="form-row">
+        <label>Cargo
+          <input type="text" id="campoCargo" maxlength="80">
+        </label>
+        <label>Categoría
+          <select id="campoCategoria" required>
+            <option value="">Seleccione...</option>
+            <option value="Funcionario">Funcionario</option>
+            <option value="Visitante">Visitante</option>
+            <option value="Vigilancia">Vigilancia</option>
+            <option value="Administrativo">Administrativo</option>
+          </select>
+        </label>
+      </div>
 
-            <div class="form-row">
-              <label>Área
-                <select id="campoArea" required>
-                  <option value="">Cargando áreas...</option>
-                </select>
-              </label>
-              <label>Horario
-                <select id="campoHorario" required>
-                  <option value="">Cargando horarios...</option>
-                </select>
-              </label>
-            </div>
+      <div class="form-row">
+        <label>Género
+          <select id="campoGenero">
+            <option value="">Seleccione...</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </label>
+        <label>Teléfono
+          <input type="text" id="campoTelefono" maxlength="20">
+        </label>
+      </div>
 
-            <div class="form-row">
-              <label>Fecha de ingreso
-                <input type="date" id="campoFechaIngreso" required>
-              </label>
-            </div>
+      <div class="form-row">
+        <label>Correo electrónico
+          <input type="email" id="campoCorreo" maxlength="100">
+        </label>
+        <label>Área
+          <select id="campoArea" required>
+            <option value="">Cargando áreas...</option>
+          </select>
+        </label>
+      </div>
 
-            <label class="form-full">Observaciones
-              <textarea id="campoObservaciones" rows="3" maxlength="255"></textarea>
-            </label>
+      <div class="form-row">
+        <label>Horario
+          <select id="campoHorario" required>
+            <option value="">Cargando horarios...</option>
+          </select>
+        </label>
+        <label>Fecha de ingreso
+          <input type="date" id="campoFechaIngreso" required>
+        </label>
+      </div>
 
-            <div class="modal-footer">
-              <button type="button" class="btn-ghost" onclick="cerrarModalAgregarUsuario()">Cancelar</button>
-              <button type="submit" class="btn-primary-sm">Guardar Usuario</button>
-            </div>
+      <label class="form-full">Observaciones
+        <textarea id="campoObservaciones" rows="3" maxlength="255"></textarea>
+      </label>
 
-          </form>
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" onclick="cerrarModalAgregarUsuario()">Cancelar</button>
+        <button type="submit" class="btn-primary-sm">Guardar Usuario</button>
+      </div>
+
+    </form>
         </div>
       </div>
 <!-- ================= Modal Confirmación (reutilizable) ================= -->
@@ -260,6 +267,115 @@
     </div>
   </div>
 </div>
+<!-- ================= Modal Editar Usuario ================= -->
+<div class="modal-overlay hidden" id="modalEditarUsuario">
+  <div class="modal-box modal-box-ancho">
+    <button class="modal-close" onclick="cerrarModalEditarUsuario()">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="modal-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <h3>Editar Usuario</h3>
+    </div>
+
+    <form id="formEditarUsuario" class="modal-body" onsubmit="return guardarEdicionUsuario(event)">
+
+      <div class="form-row">
+        <label>Documento
+          <input type="text" id="editDocumento" disabled>
+        </label>
+        <label>Nombres
+          <input type="text" id="editNombres" required maxlength="100">
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>Apellidos
+          <input type="text" id="editApellidos" required maxlength="100">
+        </label>
+        <label>Cargo
+          <input type="text" id="editCargo" maxlength="80">
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>Categoría
+          <select id="editCategoria" required>
+            <option value="">Seleccione...</option>
+            <option value="Funcionario">Funcionario</option>
+            <option value="Visitante">Visitante</option>
+            <option value="Vigilancia">Vigilancia</option>
+            <option value="Administrativo">Administrativo</option>
+          </select>
+        </label>
+        <label>Género
+          <select id="editGenero">
+            <option value="">Seleccione...</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>Teléfono
+          <input type="text" id="editTelefono" maxlength="20">
+        </label>
+        <label>Correo electrónico
+          <input type="email" id="editCorreo" maxlength="100">
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>Área
+          <select id="editArea" required>
+            <option value="">Cargando áreas...</option>
+          </select>
+        </label>
+        <label>Horario
+          <input type="text" id="editHorarioTexto" disabled>
+        </label>
+      </div>
+
+      <p style="font-size: 12px; color: var(--gris-claro); margin-top: -8px;">
+        Para cambiar el horario, ve al módulo de Configuración.
+      </p>
+
+      <div class="form-row">
+        <label>Fecha de ingreso
+          <input type="date" id="editFechaIngreso" required>
+        </label>
+      </div>
+
+      <label class="form-full">Observaciones
+        <textarea id="editObservaciones" rows="3" maxlength="255"></textarea>
+      </label>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" onclick="cerrarModalEditarUsuario()">Cancelar</button>
+        <button type="submit" class="btn-primary-sm">Guardar Cambios</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+<!-- ================= Modal Aviso (reutilizable) ================= -->
+<div class="modal-overlay hidden" id="modalAviso">
+  <div class="modal-box">
+    <div class="modal-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+      <h3 id="tituloAviso">Aviso</h3>
+    </div>
+
+    <p id="mensajeAviso" style="color: var(--gris-texto); font-size: 14px; margin-bottom: 22px;"></p>
+
+    <div class="modal-footer">
+      <button type="button" class="btn-primary-sm" id="btnAceptarAviso">Aceptar</button>
+    </div>
+  </div>
+</div>
     </main>
   </div>
 </div>
@@ -273,26 +389,45 @@
     const resultado = await window.pywebview.api.listar_funcionarios();
 
     if (!resultado.ok) {
-      alert('No se pudo cargar la lista de usuarios: ' + resultado.error);
+       await mostrarAviso('No se pudo cargar la lista de usuarios: ' + resultado.error, 'Error');
       return;
     }
 
     pintarTabla(resultado.datos);
   }
 
+    const FUNCIONARIOS_POR_PAGINA = 10;
+  let funcionariosCompletos = [];
+  let paginaActual = 1;
+
   function pintarTabla(funcionarios) {
+    funcionariosCompletos = funcionarios;
+    paginaActual = 1;
+    renderizarPaginaActual();
+  }
+
+  function renderizarPaginaActual() {
     const cuerpo = document.getElementById('cuerpoTablaUsuarios');
-    cuerpo.innerHTML = ''; // limpia cualquier fila anterior
+    cuerpo.innerHTML = '';
 
-    document.getElementById('textoMostrando').textContent =
-      `Mostrando ${funcionarios.length} de ${funcionarios.length} registros`;
+    const total = funcionariosCompletos.length;
 
-    if (funcionarios.length === 0) {
+    if (total === 0) {
+      document.getElementById('textoMostrando').textContent = 'Mostrando 0 de 0 registros';
+      document.getElementById('contenedorPaginacion').innerHTML = '';
       cuerpo.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#94a3b8; padding:20px;">No hay usuarios registrados todavía</td></tr>';
       return;
     }
 
-    funcionarios.forEach((f, indice) => {
+    const inicio = (paginaActual - 1) * FUNCIONARIOS_POR_PAGINA;
+    const fin = inicio + FUNCIONARIOS_POR_PAGINA;
+    const funcionariosPagina = funcionariosCompletos.slice(inicio, fin);
+
+    document.getElementById('textoMostrando').textContent =
+      `Mostrando ${inicio + 1} a ${Math.min(fin, total)} de ${total} registros`;
+
+    funcionariosPagina.forEach((f, indiceRelativo) => {
+      const indice = inicio + indiceRelativo;
       const nombreCompleto = `${f.nombres} ${f.apellidos}`;
       const huella = f.huella_template ? 'Registrada' : 'No registrada';
       const estadoTexto = f.estado ? 'ACTIVO' : 'INACTIVO';
@@ -314,14 +449,55 @@
             <button class="huella" title="Huella" onclick="gestionarHuella('${f.id_funcionario}')">
               <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 0-7 7c0 4 1 6 1 9"/><path d="M12 2a7 7 0 0 1 7 7c0 3 .3 5-1 8"/><path d="M9 5.5a6 6 0 0 1 6 0"/></svg>
             </button>
-            <button class="delete" title="Inactivar" onclick="inactivarFuncionario('${f.id_funcionario}')">
-              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-            </button>
+            ${f.estado
+              ? `<button class="delete" title="Inactivar" onclick="alternarEstadoFuncionario('${f.id_funcionario}', true)">
+                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                </button>`
+              : `<button class="huella" title="Activar" onclick="alternarEstadoFuncionario('${f.id_funcionario}', false)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                </button>`
+            }
           </div>
         </td>
       `;
       cuerpo.appendChild(fila);
     });
+
+    renderizarControlesPaginacion(total);
+  }
+
+  function renderizarControlesPaginacion(total) {
+    const contenedor = document.getElementById('contenedorPaginacion');
+    const totalPaginas = Math.ceil(total / FUNCIONARIOS_POR_PAGINA);
+
+    if (totalPaginas <= 1) {
+      contenedor.innerHTML = '';
+      return;
+    }
+
+    let html = `<button ${paginaActual === 1 ? 'disabled' : ''} onclick="irAPagina(${paginaActual - 1})">«</button>`;
+
+    for (let i = 1; i <= totalPaginas; i++) {
+      // Muestra siempre la primera, la última, y un rango alrededor de la actual;
+      // el resto se resume con "..." para no llenar la barra de números.
+      const cercaDeActual = Math.abs(i - paginaActual) <= 1;
+      const esExtremo = i === 1 || i === totalPaginas;
+
+      if (cercaDeActual || esExtremo) {
+        html += `<button class="${i === paginaActual ? 'active' : ''}" onclick="irAPagina(${i})">${i}</button>`;
+      } else if (i === 2 || i === totalPaginas - 1) {
+        html += `<span class="dots">...</span>`;
+      }
+    }
+
+    html += `<button ${paginaActual === totalPaginas ? 'disabled' : ''} onclick="irAPagina(${paginaActual + 1})">»</button>`;
+
+    contenedor.innerHTML = html;
+  }
+
+  function irAPagina(numero) {
+    paginaActual = numero;
+    renderizarPaginaActual();
   }
 
   // Buscador: cada vez que el usuario escribe, consulta a Python
@@ -341,30 +517,56 @@
       if (resultado.ok) pintarTabla(resultado.datos);
     }, 300);
   });
+    // Compara Documento y Confirmar Documento en tiempo real
+  document.getElementById('campoConfirmarDocumento').addEventListener('input', verificarCoincidenciaDocumento);
+  document.getElementById('campoDocumento').addEventListener('input', verificarCoincidenciaDocumento);
+
+  function verificarCoincidenciaDocumento() {
+    const original = document.getElementById('campoDocumento').value.trim();
+    const confirmacion = document.getElementById('campoConfirmarDocumento').value.trim();
+    const texto = document.getElementById('textoCoincidenciaDocumento');
+
+    if (confirmacion === '') {
+      texto.textContent = '';
+      return;
+    }
+
+    if (original === confirmacion) {
+      texto.textContent = '✓ Los documentos coinciden';
+      texto.style.color = 'var(--verde)';
+    } else {
+      texto.textContent = '✗ Los documentos no coinciden';
+      texto.style.color = 'var(--rojo)';
+    }
+  }
 
   // Estas 3 funciones son "ganchos" para lo que programemos después
   // (editar, gestionar huella, inactivar) — por ahora solo avisan.
   function editarFuncionario(id) {
-    alert('Editar funcionario ' + id + ' — pendiente de construir');
+    mostrarAviso('Editar funcionario ' + id + ' — pendiente de construir');
   }
   function gestionarHuella(id) {
-    alert('Gestionar huella de ' + id + ' — pendiente de construir');
+    mostrarAviso('Gestionar huella de ' + id + ' — pendiente de construir');
   }
-      async function inactivarFuncionario(id) {
-    const confirmado = await mostrarConfirmacion(
-      'No se elimina su información ni su historial, solo deja de aparecer como activo.',
-      '¿Seguro que deseas inactivar a este usuario?'
-    );
+        async function alternarEstadoFuncionario(id, estaActivo) {
+    const nuevoEstado = estaActivo ? 'INACTIVO' : 'ACTIVO';
+    const mensaje = estaActivo
+      ? 'No se elimina su información ni su historial, solo deja de aparecer como activo.'
+      : 'El usuario volverá a aparecer como activo en el sistema.';
+    const titulo = estaActivo
+      ? '¿Seguro que deseas inactivar a este usuario?'
+      : '¿Seguro que deseas reactivar a este usuario?';
+
+    const confirmado = await mostrarConfirmacion(mensaje, titulo);
     if (!confirmado) return;
 
-    const resultado = await window.pywebview.api.cambiar_estado_funcionario(id, 'INACTIVO');
+    const resultado = await window.pywebview.api.cambiar_estado_funcionario(id, nuevoEstado);
 
-    if (!resultado.ok) {
-      alert('No se pudo inactivar el usuario: ' + resultado.error);
+     if (!resultado.ok) {
+      await mostrarAviso('No se pudo actualizar el estado: ' + resultado.error, 'Error');
       return;
     }
-
-    alert(resultado.mensaje);
+    await mostrarAviso(resultado.mensaje, 'Éxito');
     cargarFuncionarios();
   }
 
@@ -379,6 +581,89 @@
 
   function cerrarModalAgregarUsuario() {
     document.getElementById('modalAgregarUsuario').classList.add('hidden');
+  }
+    // ============ Modal Editar Usuario ============
+
+  let idFuncionarioEnEdicion = null;
+
+  async function editarFuncionario(id) {
+    const resultado = await window.pywebview.api.obtener_funcionario(id);
+
+    if (!resultado.ok) {
+      await mostrarAviso('No se pudo cargar el usuario: ' + resultado.error, 'Error');
+      return;
+    }
+
+    idFuncionarioEnEdicion = id;
+    const f = resultado.datos;
+
+    document.getElementById('editDocumento').value = f.id_funcionario;
+    document.getElementById('editNombres').value = f.nombres || '';
+    document.getElementById('editApellidos').value = f.apellidos || '';
+    document.getElementById('editCargo').value = f.cargo || '';
+    document.getElementById('editCategoria').value = f.categoria || '';
+    document.getElementById('editGenero').value = f.genero || '';
+    document.getElementById('editTelefono').value = f.telefono || '';
+    document.getElementById('editCorreo').value = f.correo_electronico || '';
+    document.getElementById('editHorarioTexto').value = f.nombre_turno || 'Sin asignar';
+    document.getElementById('editFechaIngreso').value = f.fecha_ingreso || '';
+    document.getElementById('editObservaciones').value = f.observaciones || '';
+
+    document.getElementById('modalEditarUsuario').classList.remove('hidden');
+    await cargarAreasEnSelectEditar(f.id_area);
+  }
+
+  function cerrarModalEditarUsuario() {
+    document.getElementById('modalEditarUsuario').classList.add('hidden');
+    idFuncionarioEnEdicion = null;
+  }
+
+  async function cargarAreasEnSelectEditar(idAreaActual) {
+    const select = document.getElementById('editArea');
+    const resultado = await window.pywebview.api.listar_areas();
+
+    if (!resultado.ok) {
+      select.innerHTML = '<option value="">Error al cargar áreas</option>';
+      return;
+    }
+
+    select.innerHTML = '';
+    resultado.datos.forEach(a => {
+      const opcion = document.createElement('option');
+      opcion.value = a.id_area;
+      opcion.textContent = a.nombre_area;
+      if (a.id_area === idAreaActual) opcion.selected = true;
+      select.appendChild(opcion);
+    });
+  }
+
+  async function guardarEdicionUsuario(evento) {
+    evento.preventDefault();
+
+    const datos = {
+      nombres: document.getElementById('editNombres').value.trim(),
+      apellidos: document.getElementById('editApellidos').value.trim(),
+      cargo: document.getElementById('editCargo').value.trim(),
+      categoria: document.getElementById('editCategoria').value,
+      genero: document.getElementById('editGenero').value,
+      telefono: document.getElementById('editTelefono').value.trim(),
+      correo_electronico: document.getElementById('editCorreo').value.trim(),
+      id_area: document.getElementById('editArea').value,
+      fecha_ingreso: document.getElementById('editFechaIngreso').value,
+      observaciones: document.getElementById('editObservaciones').value.trim()
+    };
+
+    const resultado = await window.pywebview.api.actualizar_funcionario(idFuncionarioEnEdicion, datos);
+
+    if (!resultado.ok) {
+      await mostrarAviso('No se pudo actualizar el usuario: ' + resultado.error, 'Error');
+      return false;
+    }
+
+    await mostrarAviso(resultado.mensaje, 'Éxito');
+    cerrarModalEditarUsuario();
+    cargarFuncionarios();
+    return false;
   }
     // ============ Modal de Confirmación (reutilizable) ============
   // Uso: const confirmado = await mostrarConfirmacion("¿Seguro...?");
@@ -405,6 +690,26 @@
 
       btnAceptar.addEventListener('click', aceptar);
       btnCancelar.addEventListener('click', cancelar);
+    });
+  }
+    // ============ Modal de Aviso (reutilizable, reemplaza alert()) ============
+
+  function mostrarAviso(mensaje, titulo = 'Aviso') {
+    return new Promise((resolver) => {
+      const overlay = document.getElementById('modalAviso');
+      document.getElementById('tituloAviso').textContent = titulo;
+      document.getElementById('mensajeAviso').textContent = mensaje;
+      overlay.classList.remove('hidden');
+
+      const btnAceptar = document.getElementById('btnAceptarAviso');
+
+      function cerrar() {
+        overlay.classList.add('hidden');
+        btnAceptar.removeEventListener('click', cerrar);
+        resolver();
+      }
+
+      btnAceptar.addEventListener('click', cerrar);
     });
   }
 
@@ -442,7 +747,15 @@
   }
 
   async function guardarNuevoUsuario(evento) {
-    evento.preventDefault();
+     evento.preventDefault();
+        const documento = document.getElementById('campoDocumento').value.trim();
+    const confirmacion = document.getElementById('campoConfirmarDocumento').value.trim();
+
+    if (documento !== confirmacion) {
+      await mostrarAviso('El documento y su confirmación no coinciden. Verifica antes de guardar.', 'Error');
+      return false;
+    }
+    
 
     const datos = {
       id_funcionario: document.getElementById('campoDocumento').value.trim(),
@@ -462,11 +775,10 @@
     const resultado = await window.pywebview.api.agregar_funcionario(datos);
 
     if (!resultado.ok) {
-      alert('No se pudo guardar el usuario: ' + resultado.error);
+      await mostrarAviso('No se pudo guardar el usuario: ' + resultado.error, 'Error');
       return false;
     }
-
-    alert(resultado.mensaje);
+    await mostrarAviso(resultado.mensaje, 'Éxito');
     cerrarModalAgregarUsuario();
     cargarFuncionarios(); // refresca la tabla con el nuevo usuario
     return false;

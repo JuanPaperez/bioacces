@@ -26,6 +26,15 @@ class Api:
             return {"ok": True, "datos": datos}
         except Exception as error:
             return {"ok": False, "error": str(error)}
+    def obtener_funcionario(self, id_funcionario):
+        """Llamado desde JS al abrir el modal de Editar, para precargar los datos."""
+        try:
+            datos = funcionario.obtener_funcionario(id_funcionario)
+            if datos:
+                return {"ok": True, "datos": datos}
+            return {"ok": False, "error": "No se encontró el funcionario."}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
 
     def listar_horarios(self):
         """Llamado desde JS al abrir el modal de Agregar Usuario, para llenar el select de Horario."""

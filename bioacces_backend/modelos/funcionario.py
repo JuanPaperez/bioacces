@@ -42,6 +42,7 @@ def listar_funcionarios():
         FROM funcionarios f
         LEFT JOIN areas a    ON f.id_area = a.id_area
         LEFT JOIN horarios h ON f.id_horario = h.id_horario
+        WHERE f.estado = 1
         ORDER BY f.nombres ASC
     """
 
@@ -172,3 +173,80 @@ def cambiar_estado_funcionario(id_funcionario, nuevo_estado):
     conexion.close()
 
     return filas_afectadas > 0
+
+def obtener_funcionario(id_funcionario):
+    """
+    Trae TODOS los datos de un funcionario específico (para precargar
+    el formulario de Editar), incluyendo el nombre del área y el
+    nombre del turno de horario (de solo lectura en el formulario).
+    """
+    conexion = obtener_conexion()
+    cursor = conexion.cursor(dictionary=True)
+
+    consulta = """
+        SELECT f.*, a.nombre_area, h.nombre_turno
+        FROM funcionarios f
+        LEFT JOIN areas a    ON f.id_area = a.id_area
+        LEFT JOIN horarios h ON f.id_horario = h.id_horario
+        WHERE f.id_funcionario = %s
+    """
+
+    cursor.execute(consulta, (id_funcionario,))
+    resultado = cursor.fetchone()
+
+    cursor.close()
+    conexion.close()
+
+    # fecha_ingreso llega como objeto date de Python, que tampoco es
+    # serializable a JSON (mismo problema que tuvimos con las horas).
+    if resultado and resultado.get("fecha_ingreso"):
+        resultado["fecha_ingreso"] = str(resultado["fecha_ingreso"])
+
+    return resultado
+
+
+def actualizar_funcionario(id_funcionario, datos):
+    """
+    Actualiza los datos personales de un funcionario existente.
+    NO permite cambiar id_funcionario (documento, llave primaria)
+    ni id_horario (eso se gestiona desde Configuración).
+    """
+    conexion = obtener_conexion()
+    cursor = conexion.cursor()
+
+    consulta = """
+        UPDATE funcionarios
+        SET nombres = %s,
+            apellidos = %s,
+            cargo = %s,
+            categoria = %s,
+            genero = %s,
+            telefono = %s,
+            correo_electronico = %s,
+            id_area = %s,
+            fecha_ingreso = %s,
+            observaciones = %s
+        WHERE id_funcionario = %s
+    """
+
+    valores = (
+        datos.get("nombres"),
+        datos.get("apellidos"),
+        datos.get("cargo") or None,
+        datos.get("categoria"),
+        datos.get("genero") or None,
+        datos.get("telefono") or None,
+        datos.get("correo_electronico") or None,
+        datos.get("id_area"),
+        datos.get("fecha_ingreso"),
+        datos.get("observaciones") or None,
+        id_funcionario,
+    )
+
+    cursor.execute(consulta, valores)
+    conexion.commit()
+
+    cursor.close()
+    conexion.close()
+
+    return True
