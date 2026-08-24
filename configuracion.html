@@ -282,7 +282,8 @@
             </button>
           </div>
 
-          <div class="btn-guardar-row">
+          <div class="btn-guardar-row" style="gap:10px;">
+            <button class="btn-outline" id="btnCancelarNuevo" style="display:none; flex:0;" onclick="cancelarModoNuevoAdmin()">Cancelar</button>
             <button class="btn-guardar" onclick="guardarAdministrador()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
               Guardar cambio
@@ -353,6 +354,7 @@
   let administradoresCompletos = [];
   let idAdminSeleccionado = null;
   let modoNuevoAdmin = false;
+  let idAdminAntesDeNuevo = null; // ← nueva: recuerda a quién tenías abierto
 
   async function cargarAdministradores() {
     const resultado = await window.pywebview.api.listar_administradores();
@@ -407,6 +409,7 @@
     document.getElementById('campoEstadoAdmin').style.display = '';
     document.getElementById('botonesAdminExistente').style.display = '';
     document.getElementById('tituloFormAdmin').textContent = 'Información del administrador seleccionado';
+    document.getElementById('btnCancelarNuevo').style.display = 'none';
 
         const btnDesactivar = document.getElementById('btnDesactivarAdmin');
     if (admin.estado) {
@@ -432,6 +435,7 @@
   }
 
   function abrirModoNuevoAdmin() {
+    idAdminAntesDeNuevo = idAdminSeleccionado;
     modoNuevoAdmin = true;
     idAdminSeleccionado = null;
 
@@ -447,7 +451,16 @@
     document.getElementById('botonesAdminExistente').style.display = 'none';
     document.getElementById('tituloFormAdmin').textContent = 'Nuevo administrador';
 
+     // Solo muestra "Cancelar" si hay a dónde regresar
+    document.getElementById('btnCancelarNuevo').style.display = idAdminAntesDeNuevo !== null ? '' : 'none';
+
     renderizarListaAdmins(); // quita el resaltado de selección
+  }
+    function cancelarModoNuevoAdmin() {
+    document.getElementById('btnCancelarNuevo').style.display = 'none';
+    if (idAdminAntesDeNuevo !== null) {
+      seleccionarAdmin(idAdminAntesDeNuevo);
+    }
   }
 
   async function guardarAdministrador() {
@@ -614,6 +627,7 @@
       btnAceptar.addEventListener('click', cerrar);
     });
   }
+
 </script>
 
 </body>
