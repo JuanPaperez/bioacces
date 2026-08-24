@@ -1,6 +1,6 @@
 """
 modelos/area.py
-------------------------
+------------------------es
 Este archivo contiene las consultas SQL relacionadas con la
 tabla `areas`. Por ahora solo necesitamos listarlas, para llenar
 el select de "Área" en el formulario de Agregar Usuario.

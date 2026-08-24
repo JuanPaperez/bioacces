@@ -6,7 +6,7 @@ Cada método público queda disponible en el HTML/JS como:
 window.pywebview.api.nombre_del_metodo(...)
 """
 
-from modelos import funcionario, area, horario
+from modelos import funcionario, area, horario, administrador
 
 
 class Api:
@@ -74,6 +74,52 @@ class Api:
         """Cambia el estado del funcionario a 'ACTIVO' o 'INACTIVO'."""
         try:
             exito = funcionario.cambiar_estado_funcionario(id_funcionario, nuevo_estado)
+            if exito:
+                return {"ok": True, "mensaje": f"Estado cambiado a {nuevo_estado}."}
+            return {"ok": False, "error": "No se pudo actualizar el estado."}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+        
+    def listar_administradores(self):
+        """Llamado desde JS al abrir el modal de Administrador del sistema."""
+        try:
+            datos = administrador.listar_administradores()
+            return {"ok": True, "datos": datos}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+
+    def crear_administrador(self, datos):
+        """Recibe un diccionario desde JS con los campos del nuevo administrador."""
+        try:
+            id_creado = administrador.crear_administrador(datos)
+            return {"ok": True, "id": id_creado, "mensaje": "Administrador creado correctamente."}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+
+    def actualizar_administrador(self, id_usuario, datos):
+        """Actualiza los datos personales de un administrador existente."""
+        try:
+            exito = administrador.actualizar_administrador(id_usuario, datos)
+            if exito:
+                return {"ok": True, "mensaje": "Administrador actualizado correctamente."}
+            return {"ok": False, "error": "No se encontró el registro para actualizar."}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+
+    def cambiar_password_administrador(self, id_usuario, password_nueva):
+        """Cambia la contraseña de un administrador."""
+        try:
+            exito = administrador.cambiar_password_administrador(id_usuario, password_nueva)
+            if exito:
+                return {"ok": True, "mensaje": "Contraseña actualizada correctamente."}
+            return {"ok": False, "error": "No se encontró el registro para actualizar."}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+
+    def cambiar_estado_administrador(self, id_usuario, nuevo_estado):
+        """Cambia el estado de un administrador a 'ACTIVO' o 'INACTIVO'."""
+        try:
+            exito = administrador.cambiar_estado_administrador(id_usuario, nuevo_estado)
             if exito:
                 return {"ok": True, "mensaje": f"Estado cambiado a {nuevo_estado}."}
             return {"ok": False, "error": "No se pudo actualizar el estado."}
