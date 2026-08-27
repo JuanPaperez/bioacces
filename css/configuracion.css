@@ -310,3 +310,58 @@
 
 .modal-close:hover { background: var(--gris-fondo); }
 .modal-close svg { width: 18px; height: 18px; stroke: var(--gris-texto); }
+
+/* ============================================================
+   Acordeón (Configuración)
+   ============================================================ */
+
+.acordeon-item {
+  background: var(--blanco);
+  border: 1px solid var(--gris-borde);
+  border-radius: 14px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.acordeon-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  padding: 18px 20px;
+  cursor: pointer;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--azul-claro);
+}
+
+.acordeon-header:hover { background: var(--gris-fondo); }
+
+.acordeon-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.acordeon-header-left svg { width: 18px; height: 18px; stroke: var(--azul-claro); }
+
+.acordeon-chevron {
+  width: 18px;
+  height: 18px;
+  stroke: var(--gris-claro);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.acordeon-item.abierto .acordeon-chevron { transform: rotate(180deg); }
+
+.acordeon-body {
+  display: none;
+  padding: 0 20px 20px 20px;
+  border-top: 1px solid var(--gris-borde);
+  padding-top: 20px;
+}
+
+.acordeon-item.abierto .acordeon-body { display: block; }

@@ -93,17 +93,18 @@
         Administrador del sistema
       </button>
 
-      <div class="config-grid">
+      <div class="acordeon">
 
-        <!-- ============ Columna izquierda ============ -->
-        <div>
-
-          <!-- Panel: Gestión de horarios -->
-          <div class="panel">
-            <div class="panel-title">
+        <!-- ============ Gestión de horarios ============ -->
+        <div class="acordeon-item abierto" data-panel="horarios">
+          <button class="acordeon-header" onclick="alternarAcordeon('horarios')">
+            <span class="acordeon-header-left">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               Gestión de horarios
-            </div>
+            </span>
+            <svg class="acordeon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="acordeon-body">
 
             <div class="current-schedule">
               <div class="avatar-lg">
@@ -160,14 +161,20 @@
                 </tbody>
               </table>
             </div>
-          </div>
 
-          <!-- Panel: Horarios especiales -->
-          <div class="panel">
-            <div class="panel-title">
+          </div>
+        </div>
+
+        <!-- ============ Horarios especiales ============ -->
+        <div class="acordeon-item" data-panel="especiales">
+          <button class="acordeon-header" onclick="alternarAcordeon('especiales')">
+            <span class="acordeon-header-left">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
               Horarios especiales (permitido)
-            </div>
+            </span>
+            <svg class="acordeon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="acordeon-body">
 
             <div class="actions-bar">
               <button class="btn-sm primary">
@@ -201,8 +208,36 @@
                 </tbody>
               </table>
             </div>
-          </div>
 
+          </div>
+        </div>
+
+        <!-- ============ Configuración general (próximamente) ============ -->
+        <div class="acordeon-item" data-panel="configGeneral">
+          <button class="acordeon-header" onclick="alternarAcordeon('configGeneral')">
+            <span class="acordeon-header-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+              Configuración general
+            </span>
+            <svg class="acordeon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="acordeon-body">
+            <p style="font-size:13px; color:var(--gris-claro);">Próximamente: nombre de la institución, NIT, minutos de tolerancia, correo de notificaciones y ruta de respaldo.</p>
+          </div>
+        </div>
+
+        <!-- ============ Auditoría (próximamente) ============ -->
+        <div class="acordeon-item" data-panel="auditoria">
+          <button class="acordeon-header" onclick="alternarAcordeon('auditoria')">
+            <span class="acordeon-header-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+              Auditoría
+            </span>
+            <svg class="acordeon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="acordeon-body">
+            <p style="font-size:13px; color:var(--gris-claro);">Próximamente: historial de inicios de sesión, intentos fallidos y cambios realizados en el sistema.</p>
+          </div>
         </div>
 
       </div>
@@ -630,5 +665,11 @@
 
 </script>
 
+<script>
+  function alternarAcordeon(nombrePanel) {
+    const item = document.querySelector(`.acordeon-item[data-panel="${nombrePanel}"]`);
+    item.classList.toggle('abierto');
+  }
+</script>
 </body>
 </html>
