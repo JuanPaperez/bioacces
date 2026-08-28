@@ -6,7 +6,7 @@ Cada método público queda disponible en el HTML/JS como:
 window.pywebview.api.nombre_del_metodo(...)
 """
 
-from modelos import funcionario, area, horario, administrador
+from modelos import funcionario, area, horario, administrador, configuracion
 
 
 class Api:
@@ -123,5 +123,21 @@ class Api:
             if exito:
                 return {"ok": True, "mensaje": f"Estado cambiado a {nuevo_estado}."}
             return {"ok": False, "error": "No se pudo actualizar el estado."}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+    
+    def obtener_configuracion(self):
+        """Llamado desde JS al abrir la sección Configuración general, para precargar los datos."""
+        try:
+            datos = configuracion.obtener_configuracion()
+            return {"ok": True, "datos": datos}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+
+    def guardar_configuracion(self, datos):
+        """Recibe un diccionario desde JS con los campos del formulario de Configuración general."""
+        try:
+            resultado = configuracion.guardar_configuracion(datos)
+            return {"ok": True, "mensaje": resultado["mensaje"]}
         except Exception as error:
             return {"ok": False, "error": str(error)}
