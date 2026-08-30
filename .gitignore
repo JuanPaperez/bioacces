@@ -1,0 +1,8 @@
+# Configuración local de cada integrante (nunca se sube)
+database/config_local.py
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
