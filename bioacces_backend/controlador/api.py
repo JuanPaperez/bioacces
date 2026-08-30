@@ -141,3 +141,11 @@ class Api:
             return {"ok": True, "mensaje": resultado["mensaje"]}
         except Exception as error:
             return {"ok": False, "error": str(error)}
+
+    def obtener_estado_sistema(self):
+        """Llamado desde JS al cargar Configuración, para el indicador de Estado del sistema."""
+        try:
+            datos = configuracion.obtener_estado_sistema()
+            return {"ok": True, "datos": datos}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}

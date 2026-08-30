@@ -1,5 +1,5 @@
 # Configuración local de cada integrante (nunca se sube)
-database/config_local.py
+bioacces_backend/database/config_local.py
 
 # Python
 __pycache__/

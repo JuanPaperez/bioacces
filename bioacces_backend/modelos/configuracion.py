@@ -47,3 +47,26 @@ def guardar_configuracion(datos):
     cursor.close()
     conexion.close()
     return {"exito": True, "mensaje": "Configuración guardada correctamente"}
+
+def obtener_estado_sistema():
+    try:
+        conexion = obtener_conexion()
+        cursor = conexion.cursor(dictionary=True)
+        cursor.execute("SELECT fecha_ultimo_backup FROM configuraciones LIMIT 1")
+        resultado = cursor.fetchone()
+        cursor.close()
+        conexion.close()
+
+        fecha = None
+        if resultado and resultado.get("fecha_ultimo_backup"):
+            fecha = resultado["fecha_ultimo_backup"].strftime("%d/%m/%Y %I:%M %p")
+
+        return {
+            "conexion_bd": True,
+            "fecha_ultimo_backup": fecha
+        }
+    except Exception:
+        return {
+            "conexion_bd": False,
+            "fecha_ultimo_backup": None
+        }

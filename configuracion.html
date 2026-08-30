@@ -93,6 +93,11 @@
         Administrador del sistema
       </button>
 
+      <div class="estado-sistema" style="display:flex; gap:24px; align-items:center; margin:14px 0; font-size:13px; color:#1c2530;">
+        <span>Conexión a base de datos: <span class="badge" id="estadoConexionBD">Verificando…</span></span>
+        <span>Último respaldo: <span class="badge" id="estadoUltimoBackup">Verificando…</span></span>
+      </div>
+
       <div class="acordeon">
 
         <!-- ============ Gestión de horarios ============ -->
@@ -702,6 +707,45 @@
     const item = document.querySelector(`.acordeon-item[data-panel="${nombrePanel}"]`);
     item.classList.toggle('abierto');
   }
+
+  // ============ Estado del sistema ============
+
+  async function cargarEstadoSistema() {
+    const resultado = await window.pywebview.api.obtener_estado_sistema();
+    const chipConexion = document.getElementById('estadoConexionBD');
+    const chipBackup = document.getElementById('estadoUltimoBackup');
+
+    if (!resultado.ok) {
+      chipConexion.textContent = 'Error';
+      chipConexion.className = 'badge inactivo';
+      chipBackup.textContent = 'No disponible';
+      chipBackup.className = 'badge inactivo';
+      return;
+    }
+
+    const datos = resultado.datos;
+
+    if (datos.conexion_bd) {
+      chipConexion.textContent = 'Activa';
+      chipConexion.className = 'badge activo';
+    } else {
+      chipConexion.textContent = 'Sin conexión';
+      chipConexion.className = 'badge inactivo';
+    }
+
+    if (datos.fecha_ultimo_backup) {
+      chipBackup.textContent = datos.fecha_ultimo_backup;
+      chipBackup.className = 'badge activo';
+    } else {
+      chipBackup.textContent = 'Sin respaldos registrados aún';
+      chipBackup.className = 'badge inactivo';
+    }
+  }
+
+ window.addEventListener('pywebviewready', () => {
+    cargarEstadoSistema();
+    setInterval(cargarEstadoSistema, 10000); // vuelve a verificar cada 10 segundos
+  });
 
   // ============ Configuración general ============
 
