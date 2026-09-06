@@ -6,7 +6,7 @@ Cada método público queda disponible en el HTML/JS como:
 window.pywebview.api.nombre_del_metodo(...)
 """
 
-from modelos import funcionario, area, horario, administrador, configuracion
+from modelos import funcionario, area, horario, administrador, configuracion, auditoria
 
 
 class Api:
@@ -37,11 +37,73 @@ class Api:
         """Llamado desde el link 'Cierre de Sesión' del sidebar."""
         self.admin_actual = None
         return {"ok": True}
+    
+        # ============================================================
+        # MÓDULO: Auditoría — integrado con Gestión de administradores
+        # ============================================================
+
+    def _registrar_log_seguro(self, tipo_accion, detalle_cambio):
+        """
+        Envoltorio para registrar_log(): si el log falla (por lo que
+        sea), NO debe tumbar la acción principal que ya se guardó.
+        Solo lo dejamos pasar en silencio por ahora; si quieren un
+        registro de estos fallos, se puede loguear a un archivo después.
+        """
+        if not self.admin_actual:
+            return
+        try:
+            auditoria.registrar_log(self.admin_actual["id_usuario"], tipo_accion, detalle_cambio)
+        except Exception:
+            pass
+        
+    def _comparar_cambios_admin(self, datos_anteriores, datos_nuevos, id_usuario):
+        """
+        MÓDULO: Auditoría
+        Compara los datos de un administrador antes y después de editarlo,
+        y arma un texto legible con exactamente qué campos cambiaron
+        (ej: "usuario: 'Isabel30' → 'IsabelV'"). Si no cambió nada, lo dice.
+        """
+        etiquetas = {
+            "nombre_completo": "nombre completo",
+            "documento": "documento",
+            "usuario": "usuario",
+            "correo_electronico": "correo electrónico",
+        }
+
+        cambios = []
+        if datos_anteriores:
+            for campo, etiqueta in etiquetas.items():
+                valor_anterior = datos_anteriores.get(campo)
+                valor_nuevo = datos_nuevos.get(campo)
+                if str(valor_anterior) != str(valor_nuevo):
+                    cambios.append(f"{etiqueta}: '{valor_anterior}' → '{valor_nuevo}'")
+
+        nombre_referencia = datos_anteriores["nombre_completo"] if datos_anteriores else f"ID {id_usuario}"
+
+        if cambios:
+            return f"Se editó al administrador '{nombre_referencia}' (ID {id_usuario}). Cambios: " + "; ".join(cambios)
+        return f"Se guardó el formulario del administrador '{nombre_referencia}' (ID {id_usuario}) sin cambios detectados."
+
+    def listar_auditoria(self):
+        """Llamado desde JS al abrir el acordeón de Auditoría."""
+        try:
+            datos = auditoria.listar_logs()
+            return {"ok": True, "datos": datos}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
 
     def listar_funcionarios(self):
         """Llamado desde JS cuando se carga la pantalla de Usuarios."""
         try:
             datos = funcionario.listar_funcionarios()
+            return {"ok": True, "datos": datos}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+
+    def listar_areas(self):
+        """Llamado desde JS al abrir el modal de Agregar Usuario, para llenar el select de Área."""
+        try:
+            datos = area.listar_areas()
             return {"ok": True, "datos": datos}
         except Exception as error:
             return {"ok": False, "error": str(error)}
@@ -102,6 +164,10 @@ class Api:
         """Recibe un diccionario desde JS con los campos del nuevo administrador."""
         try:
             id_creado = administrador.crear_administrador(datos)
+            self._registrar_log_seguro(
+                "CREAR_ADMIN",
+                f"Se creó el administrador '{datos.get('usuario')}' ({datos.get('nombre_completo')})."
+            )
             return {"ok": True, "id": id_creado, "mensaje": "Administrador creado correctamente."}
         except Exception as error:
             return {"ok": False, "error": str(error)}
@@ -109,8 +175,11 @@ class Api:
     def actualizar_administrador(self, id_usuario, datos):
         """Actualiza los datos personales de un administrador existente."""
         try:
+            datos_anteriores = administrador.obtener_datos_administrador(id_usuario)
             exito = administrador.actualizar_administrador(id_usuario, datos)
             if exito:
+                detalle = self._comparar_cambios_admin(datos_anteriores, datos, id_usuario)
+                self._registrar_log_seguro("EDITAR_ADMIN", detalle)
                 return {"ok": True, "mensaje": "Administrador actualizado correctamente."}
             return {"ok": False, "error": "No se encontró el registro para actualizar."}
         except Exception as error:
@@ -121,6 +190,12 @@ class Api:
         try:
             exito = administrador.cambiar_password_administrador(id_usuario, password_nueva)
             if exito:
+                info_admin = administrador.obtener_nombre_administrador(id_usuario)
+                nombre = info_admin["nombre_completo"] if info_admin else f"ID {id_usuario}"
+                self._registrar_log_seguro(
+                    "CAMBIAR_PASSWORD_ADMIN",
+                    f"Se cambió la contraseña del administrador '{nombre}' (ID {id_usuario})."
+                )
                 return {"ok": True, "mensaje": "Contraseña actualizada correctamente."}
             return {"ok": False, "error": "No se encontró el registro para actualizar."}
         except Exception as error:
@@ -131,6 +206,12 @@ class Api:
         try:
             exito = administrador.cambiar_estado_administrador(id_usuario, nuevo_estado)
             if exito:
+                info_admin = administrador.obtener_nombre_administrador(id_usuario)
+                nombre = info_admin["nombre_completo"] if info_admin else f"ID {id_usuario}"
+                self._registrar_log_seguro(
+                    "CAMBIAR_ESTADO_ADMIN",
+                    f"Se cambió el estado del administrador '{nombre}' (ID {id_usuario}) a {nuevo_estado}."
+                )
                 return {"ok": True, "mensaje": f"Estado cambiado a {nuevo_estado}."}
             return {"ok": False, "error": "No se pudo actualizar el estado."}
         except Exception as error:

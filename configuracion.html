@@ -262,15 +262,32 @@
 
         <!-- ============ Auditoría (próximamente) ============ -->
         <div class="acordeon-item" data-panel="auditoria">
-          <button class="acordeon-header" onclick="alternarAcordeon('auditoria')">
+          <button class="acordeon-header" onclick="alternarAcordeon('auditoria'); cargarAuditoria();">
             <span class="acordeon-header-left">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
               Auditoría
             </span>
             <svg class="acordeon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
-          <div class="acordeon-body">
-            <p style="font-size:13px; color:var(--gris-claro);">Próximamente: historial de inicios de sesión, intentos fallidos y cambios realizados en el sistema.</p>
+                    <div class="acordeon-body">
+            <!-- MÓDULO: Auditoría -->
+            <div class="actions-bar">
+              <button class="btn-sm" onclick="cargarAuditoria()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>
+                Actualizar
+              </button>
+            </div>
+
+            <div class="table-mini-wrap">
+              <table class="table-mini">
+                <thead>
+                  <tr><th>Fecha</th><th>Administrador</th><th>Acción</th><th>Detalle</th></tr>
+                </thead>
+                <tbody id="tablaAuditoria">
+                  <!-- Se llena dinámicamente desde JS -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -785,6 +802,36 @@
       return;
     }
     await mostrarAviso(resultado.mensaje, 'Éxito');
+  }
+    // ============================================================
+    // MÓDULO: Auditoría
+    // ============================================================
+ 
+  async function cargarAuditoria() {
+    const resultado = await window.pywebview.api.listar_auditoria();
+    const cuerpoTabla = document.getElementById('tablaAuditoria');
+
+    if (!resultado.ok) {
+      cuerpoTabla.innerHTML = `<tr><td colspan="4">Error al cargar: ${resultado.error}</td></tr>`;
+      return;
+    }
+
+    if (resultado.datos.length === 0) {
+      cuerpoTabla.innerHTML = `<tr><td colspan="4">Todavía no hay registros de auditoría.</td></tr>`;
+      return;
+    }
+
+    cuerpoTabla.innerHTML = '';
+    resultado.datos.forEach(log => {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${log.fecha_hora}</td>
+        <td>${log.nombre_usuario || 'Desconocido'}</td>
+        <td>${log.tipo_accion}</td>
+        <td>${log.detalle_cambio}</td>
+      `;
+      cuerpoTabla.appendChild(fila);
+    });
   }
 </script>
 </body>

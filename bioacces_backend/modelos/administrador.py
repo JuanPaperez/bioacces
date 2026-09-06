@@ -195,6 +195,28 @@ def cambiar_estado_administrador(id_usuario, nuevo_estado):
     conexion.close()
 
     return filas_afectadas > 0
+
+def obtener_nombre_administrador(id_usuario):
+    """
+    MÓDULO: Auditoría
+    Devuelve nombre_completo y usuario de un administrador dado su
+    id_usuario. Se usa solo para poder mostrar el nombre real en los
+    logs de auditoría, en vez de dejar únicamente el ID.
+    """
+    conexion = obtener_conexion()
+    cursor = conexion.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT nombre_completo, usuario FROM usuarios_administrative WHERE id_usuario = %s",
+        (id_usuario,)
+    )
+    resultado = cursor.fetchone()
+
+    cursor.close()
+    conexion.close()
+
+    return resultado
+
 def obtener_administrador_por_usuario(usuario):
     """
     Busca un administrador por su nombre de usuario. Devuelve TODOS
@@ -245,3 +267,25 @@ def autenticar_administrador(usuario, password):
     admin.pop("password_hash")
 
     return {"exito": True, "datos": admin}
+
+def obtener_datos_administrador(id_usuario):
+    """
+    MÓDULO: Auditoría
+    Devuelve nombre_completo, documento, usuario y correo_electronico
+    de un administrador ANTES de aplicarle una edición, para poder
+    comparar qué campos cambiaron y armar un log con el detalle real.
+    """
+    conexion = obtener_conexion()
+    cursor = conexion.cursor(dictionary=True)
+
+    cursor.execute(
+        """SELECT nombre_completo, documento, usuario, correo_electronico
+           FROM usuarios_administrative WHERE id_usuario = %s""",
+        (id_usuario,)
+    )
+    resultado = cursor.fetchone()
+
+    cursor.close()
+    conexion.close()
+
+    return resultado
