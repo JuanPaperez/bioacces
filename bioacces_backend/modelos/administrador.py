@@ -195,3 +195,53 @@ def cambiar_estado_administrador(id_usuario, nuevo_estado):
     conexion.close()
 
     return filas_afectadas > 0
+def obtener_administrador_por_usuario(usuario):
+    """
+    Busca un administrador por su nombre de usuario. Devuelve TODOS
+    los campos (incluido password_hash) porque esta función es de
+    uso interno, solo para autenticar — nunca se le pasa el resultado
+    completo al frontend.
+    """
+    conexion = obtener_conexion()
+    cursor = conexion.cursor(dictionary=True)
+
+    consulta = """
+        SELECT id_usuario, usuario, password_hash, nombre_completo,
+               documento, correo_electronico, estado
+        FROM usuarios_administrative
+        WHERE usuario = %s
+        LIMIT 1
+    """
+    cursor.execute(consulta, (usuario,))
+    resultado = cursor.fetchone()
+
+    cursor.close()
+    conexion.close()
+
+    return resultado
+
+
+def autenticar_administrador(usuario, password):
+    """
+    Valida usuario + contraseña contra la base de datos.
+    Devuelve {"exito": True, "datos": {...}} sin password_hash si
+    todo es correcto, o {"exito": False, "error": "..."} si no.
+    """
+    admin = obtener_administrador_por_usuario(usuario)
+
+    if not admin:
+        return {"exito": False, "error": "Usuario o contraseña incorrectos."}
+
+    if not admin["estado"]:
+        return {"exito": False, "error": "Este administrador está inactivo. Contacte al administrador del sistema."}
+
+    password_bytes = password.encode("utf-8")
+    hash_guardado = admin["password_hash"].encode("utf-8")
+
+    if not bcrypt.checkpw(password_bytes, hash_guardado):
+        return {"exito": False, "error": "Usuario o contraseña incorrectos."}
+
+    # Nunca dejamos salir el hash hacia el resto del sistema.
+    admin.pop("password_hash")
+
+    return {"exito": True, "datos": admin}

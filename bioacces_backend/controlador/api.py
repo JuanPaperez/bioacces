@@ -11,28 +11,38 @@ from modelos import funcionario, area, horario, administrador, configuracion
 
 class Api:
 
+    def __init__(self):
+        # Guarda al administrador que inició sesión mientras la app
+        # está abierta. None = nadie ha iniciado sesión todavía.
+        self.admin_actual = None
+
+    def iniciar_sesion(self, usuario, password):
+        """Llamado desde JS en index.html al enviar el formulario de login."""
+        try:
+            resultado = administrador.autenticar_administrador(usuario, password)
+            if resultado["exito"]:
+                self.admin_actual = resultado["datos"]
+                return {"ok": True, "datos": resultado["datos"]}
+            return {"ok": False, "error": resultado["error"]}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+
+    def obtener_sesion_actual(self):
+        """Llamado desde cualquier pantalla para saber quién está logueado (topbar, auditoría, etc.)."""
+        if self.admin_actual:
+            return {"ok": True, "datos": self.admin_actual}
+        return {"ok": False, "error": "No hay sesión activa."}
+
+    def cerrar_sesion(self):
+        """Llamado desde el link 'Cierre de Sesión' del sidebar."""
+        self.admin_actual = None
+        return {"ok": True}
+
     def listar_funcionarios(self):
         """Llamado desde JS cuando se carga la pantalla de Usuarios."""
         try:
             datos = funcionario.listar_funcionarios()
             return {"ok": True, "datos": datos}
-        except Exception as error:
-            return {"ok": False, "error": str(error)}
-        
-    def listar_areas(self):
-        """Llamado desde JS al abrir el modal de Agregar Usuario, para llenar el select de Área."""
-        try:
-            datos = area.listar_areas()
-            return {"ok": True, "datos": datos}
-        except Exception as error:
-            return {"ok": False, "error": str(error)}
-    def obtener_funcionario(self, id_funcionario):
-        """Llamado desde JS al abrir el modal de Editar, para precargar los datos."""
-        try:
-            datos = funcionario.obtener_funcionario(id_funcionario)
-            if datos:
-                return {"ok": True, "datos": datos}
-            return {"ok": False, "error": "No se encontró el funcionario."}
         except Exception as error:
             return {"ok": False, "error": str(error)}
 

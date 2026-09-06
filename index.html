@@ -59,14 +59,14 @@
       <h2>INICIO DE SESIÓN</h2>
       <p class="subtitle">Ingrese sus credenciales para continuar</p>
 
-      <form action="registro.html" method="get">
+      <form id="formLogin">
 
         <div class="field">
           <svg class="leading" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="8" r="4"/>
             <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
           </svg>
-          <input type="text" placeholder="Usuario" required>
+          <input type="text" id="usuario" placeholder="Usuario" required>
         </div>
 
         <div class="field">
@@ -108,6 +108,24 @@
     const input = document.getElementById('password');
     input.type = input.type === 'password' ? 'text' : 'password';
   }
+
+  document.getElementById('formLogin').addEventListener('submit', async function (evento) {
+    evento.preventDefault();
+
+    const usuario = document.getElementById('usuario').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!usuario || !password) return;
+
+    const resultado = await window.pywebview.api.iniciar_sesion(usuario, password);
+
+    if (!resultado.ok) {
+      alert(resultado.error);
+      return;
+    }
+
+    window.location.href = 'registro.html';
+  });
 </script>
 
 </body>
