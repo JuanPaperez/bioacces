@@ -365,3 +365,55 @@
 }
 
 .acordeon-item.abierto .acordeon-body { display: block; }
+
+  /* ============================================================
+      MÓDULO: Auditoría — permite que la columna Detalle haga salto
+      de línea en vez de cortarse (sin afectar las tablas de Horarios
+      ni Horarios especiales, que sí quedan en una sola línea)
+     ============================================================ */
+
+#tablaAuditoria td:last-child {
+  white-space: normal;
+  word-break: break-word;
+  max-width: 380px;
+}
+
+/* ============================================================
+   MÓDULO: Auditoría — paginación (mismo estilo que Usuarios)
+   ============================================================ */
+
+.table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.pagination { display: flex; gap: 4px; }
+
+.pagination button {
+  min-width: 32px;
+  height: 32px;
+  border: 1px solid var(--gris-borde);
+  border-radius: 8px;
+  background: var(--blanco);
+  color: var(--gris-texto);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.pagination button:hover:not(:disabled) { background: var(--gris-fondo); }
+.pagination button:disabled { opacity: 0.4; cursor: default; }
+
+.pagination button.active {
+  background: var(--azul-claro);
+  border-color: var(--azul-claro);
+  color: var(--blanco);
+}
+
+.pagination .dots {
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  color: var(--gris-claro);
+}

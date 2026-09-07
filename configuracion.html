@@ -288,6 +288,9 @@
                 </tbody>
               </table>
             </div>
+            <div class="table-footer">
+              <span class="showing" id="textoMostrandoAuditoria">Cargando...</span>
+              <div class="pagination" id="contenedorPaginacionAuditoria"></div>
           </div>
         </div>
 
@@ -807,22 +810,44 @@
     // MÓDULO: Auditoría
     // ============================================================
  
+    const LOGS_POR_PAGINA = 10;
+  let logsCompletos = [];
+  let paginaActualAuditoria = 1;
+
   async function cargarAuditoria() {
     const resultado = await window.pywebview.api.listar_auditoria();
-    const cuerpoTabla = document.getElementById('tablaAuditoria');
 
     if (!resultado.ok) {
-      cuerpoTabla.innerHTML = `<tr><td colspan="4">Error al cargar: ${resultado.error}</td></tr>`;
+      document.getElementById('tablaAuditoria').innerHTML =
+        `<tr><td colspan="4">Error al cargar: ${resultado.error}</td></tr>`;
       return;
     }
 
-    if (resultado.datos.length === 0) {
+    logsCompletos = resultado.datos;
+    paginaActualAuditoria = 1;
+    renderizarPaginaAuditoria();
+  }
+
+  function renderizarPaginaAuditoria() {
+    const cuerpoTabla = document.getElementById('tablaAuditoria');
+    const total = logsCompletos.length;
+
+    if (total === 0) {
       cuerpoTabla.innerHTML = `<tr><td colspan="4">Todavía no hay registros de auditoría.</td></tr>`;
+      document.getElementById('textoMostrandoAuditoria').textContent = 'Mostrando 0 de 0 registros';
+      document.getElementById('contenedorPaginacionAuditoria').innerHTML = '';
       return;
     }
+
+    const inicio = (paginaActualAuditoria - 1) * LOGS_POR_PAGINA;
+    const fin = inicio + LOGS_POR_PAGINA;
+    const logsPagina = logsCompletos.slice(inicio, fin);
+
+    document.getElementById('textoMostrandoAuditoria').textContent =
+      `Mostrando ${inicio + 1} a ${Math.min(fin, total)} de ${total} registros`;
 
     cuerpoTabla.innerHTML = '';
-    resultado.datos.forEach(log => {
+    logsPagina.forEach(log => {
       const fila = document.createElement('tr');
       fila.innerHTML = `
         <td>${log.fecha_hora}</td>
@@ -832,6 +857,40 @@
       `;
       cuerpoTabla.appendChild(fila);
     });
+
+    renderizarControlesPaginacionAuditoria(total);
+  }
+
+  function renderizarControlesPaginacionAuditoria(total) {
+    const contenedor = document.getElementById('contenedorPaginacionAuditoria');
+    const totalPaginas = Math.ceil(total / LOGS_POR_PAGINA);
+
+    if (totalPaginas <= 1) {
+      contenedor.innerHTML = '';
+      return;
+    }
+
+    let html = `<button ${paginaActualAuditoria === 1 ? 'disabled' : ''} onclick="irAPaginaAuditoria(${paginaActualAuditoria - 1})">«</button>`;
+
+    for (let i = 1; i <= totalPaginas; i++) {
+      const cercaDeActual = Math.abs(i - paginaActualAuditoria) <= 1;
+      const esExtremo = i === 1 || i === totalPaginas;
+
+      if (cercaDeActual || esExtremo) {
+        html += `<button class="${i === paginaActualAuditoria ? 'active' : ''}" onclick="irAPaginaAuditoria(${i})">${i}</button>`;
+      } else if (i === 2 || i === totalPaginas - 1) {
+        html += `<span class="dots">...</span>`;
+      }
+    }
+
+    html += `<button ${paginaActualAuditoria === totalPaginas ? 'disabled' : ''} onclick="irAPaginaAuditoria(${paginaActualAuditoria + 1})">»</button>`;
+
+    contenedor.innerHTML = html;
+  }
+
+  function irAPaginaAuditoria(numero) {
+    paginaActualAuditoria = numero;
+    renderizarPaginaAuditoria();
   }
 </script>
 </body>

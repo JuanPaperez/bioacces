@@ -39,7 +39,7 @@ def registrar_log(id_usuario, tipo_accion, detalle_cambio):
     conexion.close()
 
 
-def listar_logs(limite=100):
+def listar_logs(limite=1000):
     """
     Devuelve los últimos 'limite' registros de auditoría, del más
     reciente al más antiguo, con el nombre del administrador que
