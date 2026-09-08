@@ -6,8 +6,7 @@ Cada método público queda disponible en el HTML/JS como:
 window.pywebview.api.nombre_del_metodo(...)
 """
 
-from modelos import funcionario, area, horario, administrador, configuracion, auditoria
-
+from modelos import funcionario, area, horario, administrador, configuracion, auditoria, registro_acceso
 
 class Api:
 
@@ -237,6 +236,23 @@ class Api:
         """Llamado desde JS al cargar Configuración, para el indicador de Estado del sistema."""
         try:
             datos = configuracion.obtener_estado_sistema()
+            return {"ok": True, "datos": datos}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+        
+    def listar_registros_acceso(self, filtros):
+        """
+        Llamado desde JS en registro.html. 'filtros' es un diccionario
+        con: fecha_desde, fecha_hasta, estado, texto_busqueda — todos
+        opcionales (se puede mandar vacío para traer todo).
+        """
+        try:
+            datos = registro_acceso.listar_registros(
+                fecha_desde=filtros.get("fecha_desde") or None,
+                fecha_hasta=filtros.get("fecha_hasta") or None,
+                estado=filtros.get("estado") or None,
+                texto_busqueda=filtros.get("texto_busqueda") or None,
+            )
             return {"ok": True, "datos": datos}
         except Exception as error:
             return {"ok": False, "error": str(error)}
