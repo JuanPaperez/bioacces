@@ -242,15 +242,43 @@ class Api:
         
     def listar_registros_acceso(self, filtros):
         """
-        Llamado desde JS en registro.html. 'filtros' es un diccionario
-        con: fecha_desde, fecha_hasta, estado, texto_busqueda — todos
-        opcionales (se puede mandar vacío para traer todo).
+        Llamado desde JS en registro.html y reportes.html. 'filtros' es
+        un diccionario con: fecha_desde, fecha_hasta, estado, categoria,
+        texto_busqueda — todos opcionales (se puede mandar vacío para
+        traer todo).
         """
         try:
             datos = registro_acceso.listar_registros(
                 fecha_desde=filtros.get("fecha_desde") or None,
                 fecha_hasta=filtros.get("fecha_hasta") or None,
                 estado=filtros.get("estado") or None,
+                categoria=filtros.get("categoria") or None,
+                texto_busqueda=filtros.get("texto_busqueda") or None,
+            )
+            return {"ok": True, "datos": datos}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+
+    def obtener_estadisticas_reportes(self, filtros):
+        """Llamado desde JS en reportes.html para llenar las 4 tarjetas de arriba."""
+        try:
+            datos = registro_acceso.obtener_estadisticas_reportes(
+                fecha_desde=filtros.get("fecha_desde") or None,
+                fecha_hasta=filtros.get("fecha_hasta") or None,
+                categoria=filtros.get("categoria") or None,
+                texto_busqueda=filtros.get("texto_busqueda") or None,
+            )
+            return {"ok": True, "datos": datos}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+
+    def obtener_tendencia_reportes(self, filtros):
+        """Llamado desde JS en reportes.html para llenar la gráfica de barras."""
+        try:
+            datos = registro_acceso.obtener_tendencia_accesos(
+                fecha_desde=filtros.get("fecha_desde") or None,
+                fecha_hasta=filtros.get("fecha_hasta") or None,
+                categoria=filtros.get("categoria") or None,
                 texto_busqueda=filtros.get("texto_busqueda") or None,
             )
             return {"ok": True, "datos": datos}

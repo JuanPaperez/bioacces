@@ -7,23 +7,24 @@ intento de marcación de huella en el Kiosco (permitido o denegado),
 asociado a un funcionario.
 
 Este modelo lo usan dos pantallas: registro.html (vista del momento
-actual) y, más adelante, reportes.html (vista histórica con más
-filtros) — ambas reusan listar_registros() con distintos filtros,
-para no duplicar la misma consulta en dos archivos.
+actual) y reportes.html (vista histórica con más filtros y
+estadísticas) — ambas reusan listar_registros() con distintos
+filtros, para no duplicar la misma consulta en dos archivos.
 """
 
 from database.conexion import obtener_conexion
 
 
-def listar_registros(fecha_desde=None, fecha_hasta=None, estado=None, texto_busqueda=None):
+def listar_registros(fecha_desde=None, fecha_hasta=None, estado=None, categoria=None, texto_busqueda=None):
     """
     Devuelve los registros de acceso que cumplen los filtros dados,
     del más reciente al más antiguo, con nombre/documento/categoría
     del funcionario ya incluidos (LEFT JOIN contra funcionarios).
 
     Todos los filtros son opcionales — si no se pasa ninguno, trae
-    todo. El filtro de texto busca coincidencia parcial en nombre,
-    apellido o documento.
+    todo. 'categoria' filtra por el rol real del funcionario
+    (Funcionario/Visitante/Vigilancia/Administrativo). El filtro de
+    texto busca coincidencia parcial en nombre, apellido o documento.
     """
     conexion = obtener_conexion()
     cursor = conexion.cursor(dictionary=True)
@@ -40,6 +41,9 @@ def listar_registros(fecha_desde=None, fecha_hasta=None, estado=None, texto_busq
     if estado:
         condiciones.append("r.estado = %s")
         valores.append(estado)
+    if categoria:
+        condiciones.append("f.categoria = %s")
+        valores.append(categoria)
     if texto_busqueda:
         condiciones.append("(f.nombres LIKE %s OR f.apellidos LIKE %s OR f.id_funcionario LIKE %s)")
         patron = f"%{texto_busqueda}%"
@@ -86,3 +90,130 @@ def _formatear_hora(valor_hora):
     horas_12 = horas % 12 or 12
 
     return f"{horas_12:02d}:{minutos:02d} {sufijo}"
+
+
+def obtener_estadisticas_reportes(fecha_desde=None, fecha_hasta=None, categoria=None, texto_busqueda=None):
+    """
+    Devuelve los 4 totales de las tarjetas de Reportes (ingreso, salida,
+    permitidos, denegados) para el periodo dado, y el % de cambio contra
+    el periodo inmediatamente anterior de la misma duración (solo si se
+    dieron ambas fechas; si no, delta_* queda en None).
+    """
+    conexion = obtener_conexion()
+    cursor = conexion.cursor(dictionary=True)
+
+    def _contar(f_desde, f_hasta):
+        condiciones = []
+        valores = []
+        if f_desde:
+            condiciones.append("r.fecha >= %s")
+            valores.append(f_desde)
+        if f_hasta:
+            condiciones.append("r.fecha <= %s")
+            valores.append(f_hasta)
+        if categoria:
+            condiciones.append("f.categoria = %s")
+            valores.append(categoria)
+        if texto_busqueda:
+            condiciones.append("(f.nombres LIKE %s OR f.apellidos LIKE %s OR f.id_funcionario LIKE %s)")
+            patron = f"%{texto_busqueda}%"
+            valores.extend([patron, patron, patron])
+
+        where_sql = ("WHERE " + " AND ".join(condiciones)) if condiciones else ""
+
+        consulta = f"""
+            SELECT
+                SUM(CASE WHEN r.tipo_acceso = 'Ingreso' THEN 1 ELSE 0 END) AS total_ingreso,
+                SUM(CASE WHEN r.tipo_acceso = 'Salida' THEN 1 ELSE 0 END) AS total_salida,
+                SUM(CASE WHEN r.estado = 'Permitido' THEN 1 ELSE 0 END) AS permitidos,
+                SUM(CASE WHEN r.estado = 'Denegado' THEN 1 ELSE 0 END) AS denegados
+            FROM registros_acceso r
+            LEFT JOIN funcionarios f ON r.id_funcionario = f.id_funcionario
+            {where_sql}
+        """
+        cursor.execute(consulta, valores)
+        fila = cursor.fetchone()
+        return {clave: int(valor or 0) for clave, valor in fila.items()}
+    actual = _contar(fecha_desde, fecha_hasta)
+
+    anterior = None
+    if fecha_desde and fecha_hasta:
+        from datetime import date, datetime, timedelta
+
+        d_desde = fecha_desde if isinstance(fecha_desde, date) else datetime.strptime(fecha_desde, "%Y-%m-%d").date()
+        d_hasta = fecha_hasta if isinstance(fecha_hasta, date) else datetime.strptime(fecha_hasta, "%Y-%m-%d").date()
+        dias = (d_hasta - d_desde).days + 1
+
+        fecha_hasta_anterior = d_desde - timedelta(days=1)
+        fecha_desde_anterior = fecha_hasta_anterior - timedelta(days=dias - 1)
+        anterior = _contar(fecha_desde_anterior, fecha_hasta_anterior)
+
+    cursor.close()
+    conexion.close()
+
+    def _delta(valor_actual, valor_anterior):
+        if anterior is None or not valor_anterior:
+            return None
+        return round(((valor_actual - valor_anterior) / valor_anterior) * 100, 1)
+
+    return {
+        "total_ingreso": actual["total_ingreso"],
+        "total_salida": actual["total_salida"],
+        "permitidos": actual["permitidos"],
+        "denegados": actual["denegados"],
+        "delta_ingreso": _delta(actual["total_ingreso"], anterior["total_ingreso"]) if anterior else None,
+        "delta_salida": _delta(actual["total_salida"], anterior["total_salida"]) if anterior else None,
+        "delta_permitidos": _delta(actual["permitidos"], anterior["permitidos"]) if anterior else None,
+        "delta_denegados": _delta(actual["denegados"], anterior["denegados"]) if anterior else None,
+    }
+
+
+def obtener_tendencia_accesos(fecha_desde=None, fecha_hasta=None, categoria=None, texto_busqueda=None):
+    """
+    Devuelve, agrupado por día, el número de accesos Permitidos y
+    Denegados dentro del periodo — esto alimenta la gráfica de barras.
+    """
+    conexion = obtener_conexion()
+    cursor = conexion.cursor(dictionary=True)
+
+    condiciones = []
+    valores = []
+    if fecha_desde:
+        condiciones.append("r.fecha >= %s")
+        valores.append(fecha_desde)
+    if fecha_hasta:
+        condiciones.append("r.fecha <= %s")
+        valores.append(fecha_hasta)
+    if categoria:
+        condiciones.append("f.categoria = %s")
+        valores.append(categoria)
+    if texto_busqueda:
+        condiciones.append("(f.nombres LIKE %s OR f.apellidos LIKE %s OR f.id_funcionario LIKE %s)")
+        patron = f"%{texto_busqueda}%"
+        valores.extend([patron, patron, patron])
+
+    where_sql = ("WHERE " + " AND ".join(condiciones)) if condiciones else ""
+
+    consulta = f"""
+        SELECT
+            r.fecha,
+            SUM(CASE WHEN r.estado = 'Permitido' THEN 1 ELSE 0 END) AS permitidos,
+            SUM(CASE WHEN r.estado = 'Denegado' THEN 1 ELSE 0 END) AS denegados
+        FROM registros_acceso r
+        LEFT JOIN funcionarios f ON r.id_funcionario = f.id_funcionario
+        {where_sql}
+        GROUP BY r.fecha
+        ORDER BY r.fecha ASC
+    """
+    cursor.execute(consulta, valores)
+    resultados = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+
+    for fila in resultados:
+        if fila.get("fecha"):
+            fila["fecha"] = fila["fecha"].strftime("%d/%m")
+        fila["permitidos"] = int(fila["permitidos"] or 0)
+        fila["denegados"] = int(fila["denegados"] or 0)
+
+    return resultados

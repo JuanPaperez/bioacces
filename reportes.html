@@ -94,7 +94,7 @@
           <label class="group-label">Fecha desde</label>
           <label class="filter-input">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <input type="date" value="2026-07-01">
+            <input type="date" id="filtroFechaDesde">
           </label>
         </div>
 
@@ -102,26 +102,26 @@
           <label class="group-label">Fecha hasta</label>
           <label class="filter-input">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <input type="date" value="2026-07-09">
+            <input type="date" id="filtroFechaHasta">
           </label>
         </div>
 
         <div class="filter-group">
           <label class="group-label">Usuario</label>
           <label class="filter-input">
-            <select><option>Todos los usuarios</option></select>
+            <select id="filtroUsuario" disabled title="Pendiente de construir"><option>Todos los usuarios</option></select>
           </label>
         </div>
 
         <div class="filter-group">
           <label class="group-label">Rol</label>
           <label class="filter-input">
-            <select>
-              <option>Todos los roles</option>
-              <option>Administrador</option>
-              <option>Funcionario</option>
-              <option>Visitante</option>
-              <option>Vigilancia</option>
+            <select id="filtroRol">
+              <option value="">Todos los roles</option>
+              <option value="Funcionario">Funcionario</option>
+              <option value="Visitante">Visitante</option>
+              <option value="Vigilancia">Vigilancia</option>
+              <option value="Administrativo">Administrativo</option>
             </select>
           </label>
         </div>
@@ -129,10 +129,10 @@
         <div class="filter-group">
           <label class="group-label">Estado</label>
           <label class="filter-input">
-            <select>
-              <option>Todos</option>
-              <option>Permitido</option>
-              <option>Denegado</option>
+            <select id="filtroEstado">
+              <option value="">Todos</option>
+              <option value="Permitido">Permitido</option>
+              <option value="Denegado">Denegado</option>
             </select>
           </label>
         </div>
@@ -141,27 +141,27 @@
       <div class="filters-actions">
         <label class="filter-input filter-search" style="max-width:280px;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" placeholder="Buscar...">
+          <input type="text" id="filtroBusqueda" placeholder="Buscar...">
         </label>
 
-        <button class="btn-filtrar">
+        <button class="btn-filtrar" onclick="cargarReportes()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
           Filtrar
         </button>
 
-        <button class="btn-ghost">
+        <button class="btn-ghost" onclick="limpiarFiltrosReportes()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>
           Limpiar filtros
         </button>
 
         <div class="spacer"></div>
 
-        <button class="btn-ghost">
+        <button class="btn-ghost" onclick="mostrarAvisoExportarReportes()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Exportar excel
         </button>
 
-        <button class="btn-ghost">
+        <button class="btn-ghost" onclick="mostrarAvisoExportarReportes()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
           Imprimir
         </button>
@@ -184,40 +184,20 @@
                 <th>Código de registro</th>
               </tr>
             </thead>
-            <tbody>
-              <tr><td>1</td><td>10/07/2026</td><td>06:48:15 a.m.</td><td>Juan Camilo Zapata</td><td>1.234.567.890</td><td>Administrador</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00001</td></tr>
-              <tr><td>2</td><td>10/07/2026</td><td>06:40:33 a.m.</td><td>Astrid Madrigal Torres</td><td>1.098.765.432</td><td>Funcionario</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00002</td></tr>
-              <tr><td>3</td><td>10/07/2026</td><td>07:35:23 a.m.</td><td>Carlos Pérez</td><td>1.112.223.334</td><td>Funcionario</td><td>Huella Digital</td><td><span class="badge denegado">DENEGADO</span></td><td>ACC-00003</td></tr>
-              <tr><td>4</td><td>10/07/2026</td><td>06:30:14 a.m.</td><td>María Gómez</td><td>1.234.556.677</td><td>Vigilancia</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00004</td></tr>
-              <tr><td>5</td><td>10/07/2026</td><td>06:53:43 a.m.</td><td>Pedro Rodríguez</td><td>1.009.887.766</td><td>Funcionario</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00005</td></tr>
-              <tr><td>6</td><td>10/07/2026</td><td>07:09:10 a.m.</td><td>Laura Torres</td><td>1.223.445.566</td><td>Funcionario</td><td>Huella Digital</td><td><span class="badge denegado">DENEGADO</span></td><td>ACC-00006</td></tr>
-              <tr><td>7</td><td>10/07/2026</td><td>06:55:09 a.m.</td><td>Camilo Ruiz</td><td>1.334.566.778</td><td>Funcionario</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00007</td></tr>
-              <tr><td>8</td><td>10/07/2026</td><td>06:32:07 a.m.</td><td>Andrés Felipe Ramírez</td><td>1.287.943.615</td><td>Administrativos</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00008</td></tr>
-              <tr><td>9</td><td>10/07/2026</td><td>06:20:45 a.m.</td><td>Valentina Gómez Castaño</td><td>1.156.842.397</td><td>Vigilancia</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00009</td></tr>
-              <tr><td>10</td><td>10/07/2026</td><td>06:50:53 a.m.</td><td>Sebastián Herrera López</td><td>1.402.781.954</td><td>Funcionario</td><td>Huella Digital</td><td><span class="badge permitido">PERMITIDO</span></td><td>ACC-00010</td></tr>
+            <tbody id="cuerpoTablaReportes">
             </tbody>
           </table>
         </div>
 
         <div class="table-footer reportes-footer">
-          <span class="showing">Mostrando 1 a 10 de 250 registros</span>
-          <div class="pagination">
-            <button>«</button>
-            <button>‹</button>
-            <button class="active">1</button>
-            <button>2</button>
-            <button>3</button>
-            <span class="dots">....</span>
-            <button>16</button>
-            <button>›</button>
-            <button>»</button>
-          </div>
+          <span class="showing" id="textoMostrandoReportes">Mostrando 0 de 0 registros</span>
+          <div class="pagination" id="contenedorPaginacionReportes"></div>
           <div class="per-page">
             Registros por página
-            <select>
-              <option>10</option>
-              <option>25</option>
-              <option>50</option>
+            <select id="selectorPorPaginaReportes">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
             </select>
           </div>
         </div>
@@ -232,8 +212,8 @@
           </div>
           <div class="stat-info">
             <p class="label">Total de ingreso</p>
-            <p class="value">75</p>
-            <p class="delta positiva">↑ 12% vs periodo anterior</p>
+            <p class="value" id="statTotalIngreso">0</p>
+            <p class="delta" id="statDeltaIngreso"></p>
           </div>
         </div>
 
@@ -243,8 +223,8 @@
           </div>
           <div class="stat-info">
             <p class="label">Total de salida</p>
-            <p class="value">68</p>
-            <p class="delta positiva">↑ 8% vs periodo anterior</p>
+            <p class="value" id="statTotalSalida">0</p>
+            <p class="delta" id="statDeltaSalida"></p>
           </div>
         </div>
 
@@ -254,8 +234,8 @@
           </div>
           <div class="stat-info">
             <p class="label">Accesos permitidos</p>
-            <p class="value">143</p>
-            <p class="delta positiva">↑ 15% vs periodo anterior</p>
+            <p class="value" id="statPermitidosReportes">0</p>
+            <p class="delta" id="statDeltaPermitidos"></p>
           </div>
         </div>
 
@@ -265,8 +245,8 @@
           </div>
           <div class="stat-info">
             <p class="label">Accesos denegados</p>
-            <p class="value">7</p>
-            <p class="delta negativa">↓ 5% vs periodo anterior</p>
+            <p class="value" id="statDenegadosReportes">0</p>
+            <p class="delta" id="statDeltaDenegados"></p>
           </div>
         </div>
 
@@ -287,68 +267,204 @@
   </div>
 </div>
 
-<script src="assets/js/chart.umd.js"></script>D
+<script src="assets/js/chart.umd.js"></script>
 <script>
-  const ctx = document.getElementById('graficaAccesos');
+  // MÓDULO: Reportes
+  let registrosPorPaginaReportes = 10;
+  let reportesCompletos = [];
+  let paginaActualReportes = 1;
+  let graficaReportes = null;
 
-new Chart(ctx, {
-  type: 'bar', // Cambiado a barras como el PDF
-  data: {
-    labels: ['10 Jul', '11 Jul', '12 Jul', '13 Jul', '14 Jul', '15 Jul', '16 Jul'],
-    datasets: [
-      {
-        label: 'Accesos Permitidos',
-        // Datos calcados de las barras del PDF
-        data: [31, 28, 30, 27, 24, 30, 15],
-        backgroundColor: '#10b981', // Verde exacto
-        borderRadius: 3,
-        barPercentage: 0.5,
-        categoryPercentage: 0.6
-      },
-      {
-        label: 'Accesos Denegados',
-        // Datos calcados de las barras del PDF
-        data: [10, 5, 10, 7, 7, 5, 0],
-        backgroundColor: '#ef4444', // Rojo exacto
-        borderRadius: 3,
-        barPercentage: 0.5,
-        categoryPercentage: 0.6
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false // Usamos la leyenda HTML propia que ya creaste en la tarjeta
-      }
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        max: 40, // Límite máximo según el prototipo en PDF
-        ticks: {
-          stepSize: 5, // Escala de 5 en 5 (0, 5, 10, 15... 40)
-          color: '#64748b',
-          font: { size: 10 }
-        },
-        grid: {
-          color: '#f1f5f9'
-        }
-      },
-      x: {
-        ticks: {
-          color: '#64748b',
-          font: { size: 10 }
-        },
-        grid: {
-          display: false
-        }
+  window.addEventListener('pywebviewready', () => {
+    inicializarGraficaReportes();
+    cargarReportes();
+  });
+
+  function obtenerFiltrosReportes() {
+    return {
+      fecha_desde: document.getElementById('filtroFechaDesde').value,
+      fecha_hasta: document.getElementById('filtroFechaHasta').value,
+      estado: document.getElementById('filtroEstado').value,
+      categoria: document.getElementById('filtroRol').value,
+      texto_busqueda: document.getElementById('filtroBusqueda').value.trim()
+    };
+  }
+
+  async function cargarReportes() {
+    const filtros = obtenerFiltrosReportes();
+
+    const [resultadoTabla, resultadoStats, resultadoTendencia] = await Promise.all([
+      window.pywebview.api.listar_registros_acceso(filtros),
+      window.pywebview.api.obtener_estadisticas_reportes(filtros),
+      window.pywebview.api.obtener_tendencia_reportes(filtros)
+    ]);
+
+    const cuerpoTabla = document.getElementById('cuerpoTablaReportes');
+
+    if (!resultadoTabla.ok) {
+      cuerpoTabla.innerHTML = `<tr><td colspan="9">Error al cargar: ${resultadoTabla.error}</td></tr>`;
+      return;
+    }
+
+    reportesCompletos = resultadoTabla.datos;
+    paginaActualReportes = 1;
+    renderizarPaginaReportes();
+
+    if (resultadoStats.ok) actualizarTarjetasReportes(resultadoStats.datos);
+    if (resultadoTendencia.ok) actualizarGraficaReportes(resultadoTendencia.datos);
+  }
+
+  function renderizarPaginaReportes() {
+    const cuerpoTabla = document.getElementById('cuerpoTablaReportes');
+    const total = reportesCompletos.length;
+
+    if (total === 0) {
+      cuerpoTabla.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#94a3b8; padding:20px;">No hay registros de acceso para estos filtros</td></tr>';
+      document.getElementById('textoMostrandoReportes').textContent = 'Mostrando 0 de 0 registros';
+      document.getElementById('contenedorPaginacionReportes').innerHTML = '';
+      return;
+    }
+
+    const inicio = (paginaActualReportes - 1) * registrosPorPaginaReportes;
+    const fin = inicio + registrosPorPaginaReportes;
+    const registrosPagina = reportesCompletos.slice(inicio, fin);
+
+    document.getElementById('textoMostrandoReportes').textContent =
+      `Mostrando ${inicio + 1} a ${Math.min(fin, total)} de ${total} registros`;
+
+    cuerpoTabla.innerHTML = '';
+    registrosPagina.forEach(r => {
+      const nombreCompleto = r.nombres ? `${r.nombres} ${r.apellidos}` : 'Desconocido';
+      const estadoClase = r.estado.toUpperCase() === 'PERMITIDO' ? 'permitido' : 'denegado';
+
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${r.id_registro}</td>
+        <td>${r.fecha}</td>
+        <td>${r.hora}</td>
+        <td>${nombreCompleto}</td>
+        <td>${r.id_funcionario ?? '-'}</td>
+        <td>${r.categoria ?? '-'}</td>
+        <td>${r.tipo_acceso}</td>
+        <td><span class="badge ${estadoClase}">${r.estado.toUpperCase()}</span></td>
+        <td>${r.codigo_registro}</td>
+      `;
+      cuerpoTabla.appendChild(fila);
+    });
+
+    renderizarControlesPaginacionReportes(total);
+  }
+
+  function renderizarControlesPaginacionReportes(total) {
+    const contenedor = document.getElementById('contenedorPaginacionReportes');
+    const totalPaginas = Math.ceil(total / registrosPorPaginaReportes);
+
+    if (totalPaginas <= 1) { contenedor.innerHTML = ''; return; }
+
+    let html = `<button ${paginaActualReportes === 1 ? 'disabled' : ''} onclick="irAPaginaReportes(${paginaActualReportes - 1})">«</button>`;
+
+    for (let i = 1; i <= totalPaginas; i++) {
+      const cercaDeActual = Math.abs(i - paginaActualReportes) <= 1;
+      const esExtremo = i === 1 || i === totalPaginas;
+      if (cercaDeActual || esExtremo) {
+        html += `<button class="${i === paginaActualReportes ? 'active' : ''}" onclick="irAPaginaReportes(${i})">${i}</button>`;
+      } else if (i === 2 || i === totalPaginas - 1) {
+        html += `<span class="dots">...</span>`;
       }
     }
+
+    html += `<button ${paginaActualReportes === totalPaginas ? 'disabled' : ''} onclick="irAPaginaReportes(${paginaActualReportes + 1})">»</button>`;
+    contenedor.innerHTML = html;
   }
-});
+
+  function irAPaginaReportes(numero) {
+    paginaActualReportes = numero;
+    renderizarPaginaReportes();
+  }
+
+  function cambiarRegistrosPorPagina() {
+    registrosPorPaginaReportes = parseInt(document.getElementById('selectorPorPaginaReportes').value, 10);
+    paginaActualReportes = 1;
+    renderizarPaginaReportes();
+  }
+
+  function limpiarFiltrosReportes() {
+    document.getElementById('filtroFechaDesde').value = '';
+    document.getElementById('filtroFechaHasta').value = '';
+    document.getElementById('filtroEstado').value = '';
+    document.getElementById('filtroRol').value = '';
+    document.getElementById('filtroBusqueda').value = '';
+    cargarReportes();
+  }
+
+  function formatearDelta(valor) {
+    if (valor === null || valor === undefined) return 'Sin periodo anterior para comparar';
+    const signo = valor >= 0 ? '↑' : '↓';
+    const clase = valor >= 0 ? 'positiva' : 'negativa';
+    return `<span class="delta ${clase}">${signo} ${Math.abs(valor)}% vs periodo anterior</span>`;
+  }
+
+  function actualizarTarjetasReportes(stats) {
+    document.getElementById('statTotalIngreso').textContent = stats.total_ingreso;
+    document.getElementById('statDeltaIngreso').innerHTML = formatearDelta(stats.delta_ingreso);
+
+    document.getElementById('statTotalSalida').textContent = stats.total_salida;
+    document.getElementById('statDeltaSalida').innerHTML = formatearDelta(stats.delta_salida);
+
+    document.getElementById('statPermitidosReportes').textContent = stats.permitidos;
+    document.getElementById('statDeltaPermitidos').innerHTML = formatearDelta(stats.delta_permitidos);
+
+    document.getElementById('statDenegadosReportes').textContent = stats.denegados;
+    document.getElementById('statDeltaDenegados').innerHTML = formatearDelta(stats.delta_denegados);
+  }
+
+  function inicializarGraficaReportes() {
+    const ctx = document.getElementById('graficaAccesos');
+    graficaReportes = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [
+          { label: 'Accesos Permitidos', data: [], backgroundColor: '#10b981', borderRadius: 3, barPercentage: 0.5, categoryPercentage: 0.6 },
+          { label: 'Accesos Denegados', data: [], backgroundColor: '#ef4444', borderRadius: 3, barPercentage: 0.5, categoryPercentage: 0.6 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 5, color: '#64748b', font: { size: 10 } }, grid: { color: '#f1f5f9' } },
+          x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  function actualizarGraficaReportes(tendencia) {
+    graficaReportes.data.labels = tendencia.map(f => f.fecha);
+    graficaReportes.data.datasets[0].data = tendencia.map(f => f.permitidos);
+    graficaReportes.data.datasets[1].data = tendencia.map(f => f.denegados);
+    graficaReportes.update();
+  }
+
+  function mostrarAvisoExportarReportes() {
+    alert('Exportar / Imprimir — pendiente de construir (Paso 4)');
+  }
+
+  // Recarga automática al cambiar fecha, rol o estado
+  document.getElementById('filtroFechaDesde').addEventListener('change', cargarReportes);
+  document.getElementById('filtroFechaHasta').addEventListener('change', cargarReportes);
+  document.getElementById('filtroEstado').addEventListener('change', cargarReportes);
+  document.getElementById('filtroRol').addEventListener('change', cargarReportes);
+  document.getElementById('selectorPorPaginaReportes').addEventListener('change', cambiarRegistrosPorPagina);
+
+  // Búsqueda con debounce (espera 300ms sin escribir antes de consultar)
+  let temporizadorBusquedaReportes;
+  document.getElementById('filtroBusqueda').addEventListener('input', () => {
+    clearTimeout(temporizadorBusquedaReportes);
+    temporizadorBusquedaReportes = setTimeout(cargarReportes, 300);
+  });
 </script>
 
 </body>
