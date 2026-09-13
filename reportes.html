@@ -8,6 +8,16 @@
 <link rel="stylesheet" href="css/app-shell.css">
 <link rel="stylesheet" href="css/registro.css">
 <link rel="stylesheet" href="css/reportes.css">
+<style media="print">
+  @page { size: landscape; margin: 12mm; }
+  .topbar, .sidebar, .filters-grid, .filters-actions, .table-footer,
+  .btn-ghost, .btn-filtrar { display: none !important; }
+  .app-body, .content { padding: 0 !important; width: 100% !important; }
+  .table-card, .chart-card, .stat-card { box-shadow: none !important; border: 1px solid #ccc !important; }
+  .data-table { font-size: 11px; }
+  .reportes-bottom { grid-template-columns: repeat(4, 1fr) !important; }
+  .chart-card { grid-column: span 4 !important; margin-top: 10px; }
+</style>
 </head>
 <body>
 
@@ -156,12 +166,12 @@
 
         <div class="spacer"></div>
 
-        <button class="btn-ghost" onclick="mostrarAvisoExportarReportes()">
+                <button class="btn-ghost" onclick="exportarExcelReportes()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Exportar excel
         </button>
 
-        <button class="btn-ghost" onclick="mostrarAvisoExportarReportes()">
+        <button class="btn-ghost" onclick="imprimirReportes()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
           Imprimir
         </button>
@@ -448,8 +458,22 @@
     graficaReportes.update();
   }
 
-  function mostrarAvisoExportarReportes() {
-    alert('Exportar / Imprimir — pendiente de construir (Paso 4)');
+    async function exportarExcelReportes() {
+    const filtros = obtenerFiltrosReportes();
+    const resultado = await window.pywebview.api.exportar_reportes_excel(filtros);
+
+    if (resultado.cancelado) return; // el usuario cerró el diálogo sin elegir ruta
+
+    if (!resultado.ok) {
+      alert('Error al exportar: ' + resultado.error);
+      return;
+    }
+
+    alert(resultado.mensaje);
+  }
+
+  function imprimirReportes() {
+    window.print();
   }
 
   // Recarga automática al cambiar fecha, rol o estado

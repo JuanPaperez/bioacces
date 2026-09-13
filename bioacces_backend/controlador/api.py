@@ -6,8 +6,8 @@ Cada método público queda disponible en el HTML/JS como:
 window.pywebview.api.nombre_del_metodo(...)
 """
 
+import webview
 from modelos import funcionario, area, horario, administrador, configuracion, auditoria, registro_acceso
-
 class Api:
 
     def __init__(self):
@@ -282,5 +282,38 @@ class Api:
                 texto_busqueda=filtros.get("texto_busqueda") or None,
             )
             return {"ok": True, "datos": datos}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+        
+    def exportar_reportes_excel(self, filtros):
+        """
+        Llamado desde JS al hacer clic en 'Exportar excel' en reportes.html.
+        Abre el diálogo nativo de guardar archivo y genera el .xlsx con
+        los mismos filtros que la tabla.
+        """
+        try:
+            ventana = webview.windows[0]
+            ruta_elegida = ventana.create_file_dialog(
+                webview.SAVE_DIALOG,
+                save_filename="reporte_accesos.xlsx",
+                file_types=("Archivos Excel (*.xlsx)",)
+            )
+
+            if not ruta_elegida:
+                return {"ok": False, "cancelado": True}
+
+            ruta_destino = ruta_elegida if isinstance(ruta_elegida, str) else ruta_elegida[0]
+            if not ruta_destino.lower().endswith(".xlsx"):
+                ruta_destino += ".xlsx"
+
+            total = registro_acceso.generar_excel_reportes(
+                ruta_destino,
+                fecha_desde=filtros.get("fecha_desde") or None,
+                fecha_hasta=filtros.get("fecha_hasta") or None,
+                estado=filtros.get("estado") or None,
+                categoria=filtros.get("categoria") or None,
+                texto_busqueda=filtros.get("texto_busqueda") or None,
+            )
+            return {"ok": True, "mensaje": f"Se exportaron {total} registros correctamente.", "ruta": ruta_destino}
         except Exception as error:
             return {"ok": False, "error": str(error)}

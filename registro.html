@@ -224,8 +224,8 @@
 
   function actualizarEstadisticas(registros) {
     const total = registros.length;
-    const permitidos = registros.filter(r => r.estado === 'PERMITIDO').length;
-    const denegados = registros.filter(r => r.estado === 'DENEGADO').length;
+        const permitidos = registros.filter(r => r.estado.toUpperCase() === 'PERMITIDO').length;
+    const denegados = registros.filter(r => r.estado.toUpperCase() === 'DENEGADO').length;
 
     document.getElementById('statTotalAccesos').textContent = total;
     document.getElementById('statPermitidos').textContent = permitidos;
@@ -262,8 +262,8 @@
 
     cuerpoTabla.innerHTML = '';
     registrosPagina.forEach(r => {
-      const nombreCompleto = r.nombres ? `${r.nombres} ${r.apellidos}` : 'Desconocido';
-      const estadoClase = r.estado === 'PERMITIDO' ? 'permitido' : 'denegado';
+            const nombreCompleto = r.nombres ? `${r.nombres} ${r.apellidos}` : 'Desconocido';
+      const estadoClase = r.estado.toUpperCase() === 'PERMITIDO' ? 'permitido' : 'denegado';
 
       const fila = document.createElement('tr');
       fila.innerHTML = `
@@ -274,7 +274,7 @@
         <td>${r.id_funcionario ?? '-'}</td>
         <td>${r.categoria ?? '-'}</td>
         <td>${r.tipo_acceso}</td>
-        <td><span class="badge ${estadoClase}">${r.estado}</span></td>
+        <td><span class="badge ${estadoClase}">${r.estado.toUpperCase()}</span></td>
         <td>${r.codigo_registro}</td>
       `;
       cuerpoTabla.appendChild(fila);

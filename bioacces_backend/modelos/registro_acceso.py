@@ -217,3 +217,85 @@ def obtener_tendencia_accesos(fecha_desde=None, fecha_hasta=None, categoria=None
         fila["denegados"] = int(fila["denegados"] or 0)
 
     return resultados
+
+  # Excel
+def generar_excel_reportes(ruta_destino, fecha_desde=None, fecha_hasta=None, estado=None, categoria=None, texto_busqueda=None):
+    """
+    Genera un archivo .xlsx en ruta_destino con los registros de acceso
+    que cumplen los filtros dados (los mismos que usa la tabla de
+    Reportes). Reutiliza listar_registros() para no duplicar la consulta.
+    Devuelve cuántos registros se exportaron.
+    """
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill, Alignment
+    from openpyxl.utils import get_column_letter
+
+    registros = listar_registros(
+        fecha_desde=fecha_desde,
+        fecha_hasta=fecha_hasta,
+        estado=estado,
+        categoria=categoria,
+        texto_busqueda=texto_busqueda,
+    )
+
+    libro = Workbook()
+    hoja = libro.active
+    hoja.title = "Reportes de Acceso"
+
+    encabezados = ["ID", "Fecha", "Hora", "Usuario", "Documento", "Rol", "Tipo de Acceso", "Estado", "Código de registro"]
+    hoja.append(encabezados)
+
+    fuente_encabezado = Font(bold=True, color="FFFFFF")
+    relleno_encabezado = PatternFill(start_color="1E3A5F", end_color="1E3A5F", fill_type="solid")
+    for columna in range(1, len(encabezados) + 1):
+        celda = hoja.cell(row=1, column=columna)
+        celda.font = fuente_encabezado
+        celda.fill = relleno_encabezado
+        celda.alignment = Alignment(horizontal="center")
+
+    relleno_permitido = PatternFill(start_color="D1FAE5", end_color="D1FAE5", fill_type="solid")
+    fuente_permitido = Font(color="065F46", bold=True)
+    relleno_denegado = PatternFill(start_color="FEE2E2", end_color="FEE2E2", fill_type="solid")
+    fuente_denegado = Font(color="991B1B", bold=True)
+
+    fila_actual = 2
+    for r in registros:
+        nombre_completo = f"{r['nombres']} {r['apellidos']}" if r.get("nombres") else "Desconocido"
+        estado_normalizado = str(r["estado"]).strip().capitalize()
+
+        hoja.append([
+            r["id_registro"],
+            r["fecha"],
+            r["hora"],
+            nombre_completo,
+            r.get("id_funcionario") or "-",
+            r.get("categoria") or "-",
+            r["tipo_acceso"],
+            estado_normalizado,
+            r["codigo_registro"],
+        ])
+
+        celda_estado = hoja.cell(row=fila_actual, column=8)
+        celda_estado.alignment = Alignment(horizontal="center")
+        if estado_normalizado == "Permitido":
+            celda_estado.fill = relleno_permitido
+            celda_estado.font = fuente_permitido
+        else:
+            celda_estado.fill = relleno_denegado
+            celda_estado.font = fuente_denegado
+
+        fila_actual += 1
+
+    anchos = [6, 12, 12, 28, 14, 16, 14, 12, 16]
+    for indice, ancho in enumerate(anchos, start=1):
+        letra_columna = get_column_letter(indice)
+        hoja.column_dimensions[letra_columna].width = ancho
+
+    hoja.freeze_panes = "A2"
+
+    ultima_fila = fila_actual - 1
+    if ultima_fila >= 2:
+        hoja.auto_filter.ref = f"A1:{get_column_letter(len(encabezados))}{ultima_fila}"
+
+    libro.save(ruta_destino)
+    return len(registros)
