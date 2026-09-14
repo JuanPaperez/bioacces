@@ -114,6 +114,54 @@ class Api:
             return {"ok": True, "datos": datos}
         except Exception as error:
             return {"ok": False, "error": str(error)}
+    
+    def listar_horarios_admin(self):
+        """Llamado desde JS al cargar el panel 'Gestión de horarios' en Configuración."""
+        try:
+            datos = horario.listar_horarios_admin()
+            return {"ok": True, "datos": datos}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+
+    def crear_horario(self, datos):
+        """Recibe un diccionario desde JS con los campos del nuevo horario."""
+        try:
+            id_creado = horario.crear_horario(datos)
+            self._registrar_log_seguro(
+                "CREAR_HORARIO",
+                f"Se creó el horario '{datos.get('nombre_turno')}' (ID {id_creado})."
+            )
+            return {"ok": True, "id": id_creado, "mensaje": "Horario creado correctamente."}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+
+    def actualizar_horario(self, id_horario, datos):
+        """Actualiza los datos de un horario existente."""
+        try:
+            exito = horario.actualizar_horario(id_horario, datos)
+            if exito:
+                self._registrar_log_seguro(
+                    "EDITAR_HORARIO",
+                    f"Se editó el horario '{datos.get('nombre_turno')}' (ID {id_horario})."
+                )
+                return {"ok": True, "mensaje": "Horario actualizado correctamente."}
+            return {"ok": False, "error": "No se encontró el registro para actualizar."}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+
+    def cambiar_estado_horario(self, id_horario, nuevo_estado):
+        """Cambia el estado de un horario a 'ACTIVO' o 'INACTIVO'."""
+        try:
+            exito = horario.cambiar_estado_horario(id_horario, nuevo_estado)
+            if exito:
+                self._registrar_log_seguro(
+                    "CAMBIAR_ESTADO_HORARIO",
+                    f"Se cambió el estado del horario ID {id_horario} a {nuevo_estado}."
+                )
+                return {"ok": True, "mensaje": f"Estado cambiado a {nuevo_estado}."}
+            return {"ok": False, "error": "No se pudo actualizar el estado."}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
 
     def buscar_funcionarios(self, texto_busqueda):
         """Llamado desde JS al escribir en la barra de búsqueda."""

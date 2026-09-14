@@ -417,3 +417,32 @@
   padding: 0 4px;
   color: var(--gris-claro);
 }
+
+/* ---------- Acciones dentro de la tabla (igual que Usuarios) ---------- */
+
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.row-actions button {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.row-actions svg { width: 16px; height: 16px; stroke: currentColor; fill: none; }
+
+.row-actions .edit { color: var(--azul-claro); }
+.row-actions .edit:hover { background: var(--azul-pastel); }
+
+.row-actions .huella { color: var(--verde); }
+.row-actions .huella:hover { background: var(--verde-fondo); }
+
+.row-actions .delete { color: var(--rojo); }
+.row-actions .delete:hover { background: var(--rojo-fondo); }
