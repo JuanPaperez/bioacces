@@ -71,6 +71,7 @@ def buscar_funcionarios(texto_busqueda):
             f.apellidos,
             f.categoria,
             f.estado,
+            f.id_horario,
             a.nombre_area,
             h.nombre_turno
         FROM funcionarios f
@@ -250,3 +251,21 @@ def actualizar_funcionario(id_funcionario, datos):
     conexion.close()
 
     return True
+
+def cambiar_horario_funcionario(id_funcionario, id_horario_nuevo):
+    """
+    Reasigna el id_horario de un funcionario (rotación individual de
+    turno). NO toca el catálogo de horarios, solo esta persona.
+    """
+    conexion = obtener_conexion()
+    cursor = conexion.cursor()
+
+    consulta = "UPDATE funcionarios SET id_horario = %s WHERE id_funcionario = %s"
+    cursor.execute(consulta, (id_horario_nuevo, id_funcionario))
+    conexion.commit()
+
+    filas_afectadas = cursor.rowcount
+    cursor.close()
+    conexion.close()
+
+    return filas_afectadas > 0

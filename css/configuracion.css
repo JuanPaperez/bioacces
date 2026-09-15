@@ -446,3 +446,45 @@
 
 .row-actions .delete { color: var(--rojo); }
 .row-actions .delete:hover { background: var(--rojo-fondo); }
+
+/* ---------- Selector de hora personalizado (24h) ---------- */
+
+.form-field-hora { position: relative; }
+
+.form-field-hora input { cursor: pointer; background: #fbfcff; }
+
+.hora-picker {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 50;
+  margin-top: 4px;
+  background: var(--blanco);
+  border: 1px solid var(--gris-borde);
+  border-radius: 10px;
+  box-shadow: var(--sombra);
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+}
+
+.hora-picker-col {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  width: 52px;
+}
+
+.hora-picker-col button {
+  padding: 6px 0;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  border-radius: 6px;
+  color: var(--gris-texto);
+  text-align: center;
+}
+
+.hora-picker-col button:hover { background: var(--gris-fondo); }
+.hora-picker-col button.selected { background: var(--azul-claro); color: var(--blanco); }

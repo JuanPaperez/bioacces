@@ -7,7 +7,7 @@ window.pywebview.api.nombre_del_metodo(...)
 """
 
 import webview
-from modelos import funcionario, area, horario, administrador, configuracion, auditoria, registro_acceso
+from modelos import funcionario, area, horario, administrador, configuracion, auditoria, registro_acceso,historial_horarios
 class Api:
 
     def __init__(self):
@@ -196,6 +196,46 @@ class Api:
             if exito:
                 return {"ok": True, "mensaje": f"Estado cambiado a {nuevo_estado}."}
             return {"ok": False, "error": "No se pudo actualizar el estado."}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+        
+    def cambiar_horario_funcionario(self, id_funcionario, id_horario_nuevo, motivo):
+        """
+        Reasigna el horario/turno de un funcionario (rotación individual),
+        dejando trazabilidad en historial_horarios. NO toca el catálogo
+        de horarios, solo la asignación de esta persona.
+        """
+        try:
+            datos_actuales = funcionario.obtener_funcionario(id_funcionario)
+            if not datos_actuales:
+                return {"ok": False, "error": "No se encontró el funcionario."}
+
+            id_horario_anterior = datos_actuales.get("id_horario")
+
+            exito = funcionario.cambiar_horario_funcionario(id_funcionario, id_horario_nuevo)
+            if not exito:
+                return {"ok": False, "error": "No se pudo actualizar el horario del funcionario."}
+
+            id_admin = self.admin_actual["id_usuario"] if self.admin_actual else None
+            historial_horarios.registrar_cambio_horario(
+                id_funcionario, id_horario_anterior, id_horario_nuevo, motivo, id_admin
+            )
+
+            nombre_completo = f"{datos_actuales.get('nombres', '')} {datos_actuales.get('apellidos', '')}".strip()
+            self._registrar_log_seguro(
+                "CAMBIAR_HORARIO_FUNCIONARIO",
+                f"Se cambió el horario de '{nombre_completo}' (ID {id_funcionario}). Motivo: {motivo}."
+            )
+
+            return {"ok": True, "mensaje": "Horario del funcionario actualizado correctamente."}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
+        
+    def obtener_ultimo_cambio_horario(self):
+        """Llamado desde JS al cargar Configuración, para la tarjeta de 'Gestión de horarios'."""
+        try:
+            datos = historial_horarios.obtener_ultimo_cambio()
+            return {"ok": True, "datos": datos}
         except Exception as error:
             return {"ok": False, "error": str(error)}
         
