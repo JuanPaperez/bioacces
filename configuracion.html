@@ -118,7 +118,7 @@
               <div class="info">
                 <h4 id="tarjetaHorarioNombre">Sin cambios registrados aún</h4>
                 <p>Documento &nbsp;<strong id="tarjetaHorarioDocumento">—</strong></p>
-                <p>Categoría &nbsp;<strong id="tarjetaHorarioCategoria">—</strong></p>
+                <p>Área &nbsp;<strong id="tarjetaHorarioArea">—</strong></p>
                 <span class="schedule-chip" id="tarjetaHorarioChip">—</span>
               </div>
               <button class="btn-sm" onclick="abrirModalCambiarHorarioFuncionario()">
@@ -481,7 +481,7 @@
               <div class="info">
                 <h4 id="nombreFuncionarioSeleccionado"></h4>
                 <p>Documento &nbsp;<strong id="documentoFuncionarioSeleccionado"></strong></p>
-                <p>Categoría &nbsp;<strong id="categoriaFuncionarioSeleccionado"></strong></p>
+                <p>Área &nbsp;<strong id="areaFuncionarioSeleccionado"></strong></p>
                 <span class="schedule-chip" id="horarioActualFuncionarioSeleccionado"></span>
               </div>
             </div>
@@ -1302,7 +1302,7 @@
 
     document.getElementById('nombreFuncionarioSeleccionado').textContent = `${f.nombres} ${f.apellidos}`;
     document.getElementById('documentoFuncionarioSeleccionado').textContent = f.id_funcionario;
-    document.getElementById('categoriaFuncionarioSeleccionado').textContent = f.categoria || '-';
+        document.getElementById('areaFuncionarioSeleccionado').textContent = f.nombre_area || '-';
     document.getElementById('horarioActualFuncionarioSeleccionado').textContent = f.nombre_turno || 'Sin asignar';
 
     document.getElementById('listaFuncionariosHorario').style.display = 'none';
@@ -1340,21 +1340,6 @@
       return;
     }
 
-  function actualizarTarjetaHorario(nombreCompleto, documento, categoria, nombreHorario) {
-    document.getElementById('tarjetaHorarioNombre').textContent = nombreCompleto;
-    document.getElementById('tarjetaHorarioDocumento').textContent = documento;
-    document.getElementById('tarjetaHorarioCategoria').textContent = categoria || '-';
-    document.getElementById('tarjetaHorarioChip').textContent = nombreHorario || 'Sin asignar';
-  }
-
-  async function cargarUltimoCambioHorario() {
-    const resultado = await window.pywebview.api.obtener_ultimo_cambio_horario();
-    if (!resultado.ok || !resultado.datos) return; // se queda con el placeholder inicial
-
-    const d = resultado.datos;
-    actualizarTarjetaHorario(`${d.nombres} ${d.apellidos}`, d.id_funcionario, d.categoria, d.horario_nuevo);
-  }
-
     const resultado = await window.pywebview.api.cambiar_horario_funcionario(idFuncionarioSeleccionadoHorario, idHorarioNuevo, motivo);
     if (!resultado.ok) {
       await mostrarAviso('No se pudo cambiar el horario: ' + resultado.error, 'Error');
@@ -1363,10 +1348,25 @@
 
     cerrarModalCambiarHorarioFuncionario();
     const nombreSeleccionado = document.getElementById('nombreFuncionarioSeleccionado').textContent;
-    const categoriaSeleccionada = document.getElementById('categoriaFuncionarioSeleccionado').textContent;
+    const areaSeleccionada = document.getElementById('areaFuncionarioSeleccionado').textContent;
     const nombreHorarioNuevo = document.getElementById('selectNuevoHorarioFuncionario').selectedOptions[0].textContent;
-    actualizarTarjetaHorario(nombreSeleccionado, idFuncionarioSeleccionadoHorario, categoriaSeleccionada, nombreHorarioNuevo);
+    actualizarTarjetaHorario(nombreSeleccionado, idFuncionarioSeleccionadoHorario, areaSeleccionada, nombreHorarioNuevo);
     await mostrarAviso(resultado.mensaje, 'Éxito');
+  }
+
+  function actualizarTarjetaHorario(nombreCompleto, documento, area, nombreHorario) {
+    document.getElementById('tarjetaHorarioNombre').textContent = nombreCompleto;
+    document.getElementById('tarjetaHorarioDocumento').textContent = documento;
+    document.getElementById('tarjetaHorarioArea').textContent = area || '-';
+    document.getElementById('tarjetaHorarioChip').textContent = nombreHorario || 'Sin asignar';
+  }
+
+  async function cargarUltimoCambioHorario() {
+    const resultado = await window.pywebview.api.obtener_ultimo_cambio_horario();
+    if (!resultado.ok || !resultado.datos) return; // se queda con el placeholder inicial
+
+    const d = resultado.datos;
+    actualizarTarjetaHorario(`${d.nombres} ${d.apellidos}`, d.id_funcionario, d.nombre_area, d.horario_nuevo);
   }
 </script>
 </body>

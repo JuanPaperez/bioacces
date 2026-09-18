@@ -28,20 +28,17 @@ def registrar_cambio_horario(id_funcionario, id_horario_anterior, id_horario_nue
     return id_creado
 
 def obtener_ultimo_cambio():
-    """
-    Trae el cambio de horario más reciente registrado, con el nombre
-    del funcionario y el nombre del turno nuevo ya "traducidos", para
-    mostrar en la tarjeta de Gestión de horarios en Configuración.
-    """
     conexion = obtener_conexion()
     cursor = conexion.cursor(dictionary=True)
 
     consulta = """
         SELECT hh.id_historial, hh.fecha_cambio, hh.motivo,
-               f.id_funcionario, f.nombres, f.apellidos, f.categoria,
+               f.id_funcionario, f.nombres, f.apellidos,
+               a.nombre_area,
                hn.nombre_turno AS horario_nuevo
         FROM historial_horarios hh
         JOIN funcionarios f      ON hh.id_funcionario = f.id_funcionario
+        LEFT JOIN areas a        ON f.id_area = a.id_area
         LEFT JOIN horarios hn    ON hh.id_horario_nuevo = hn.id_horario
         ORDER BY hh.fecha_cambio DESC
         LIMIT 1

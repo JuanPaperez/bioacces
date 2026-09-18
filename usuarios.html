@@ -111,12 +111,9 @@
           <input type="text" placeholder="Buscar usuario, Documento...">
         </label>
 
-                <label class="filter-input">
-          <select id="filtroCategoria" onchange="aplicarFiltroCategoria()">
-            <option value="">Todos los roles</option>
-            <option value="Funcionario">Funcionario</option>
-            <option value="Vigilancia">Vigilancia</option>
-            <option value="Administrativo">Administrativo</option>
+        <label class="filter-input">
+          <select id="filtroArea" onchange="aplicarFiltroArea()">
+            <option value="">Todas las áreas</option>
           </select>
         </label>
 
@@ -135,7 +132,7 @@
                 <th>ID</th>
                 <th>Usuario</th>
                 <th>Documento</th>
-                <th>Rol</th>
+                <th>Area</th>
                 <th>Huella</th>
                 <th>Estado</th>
                 <th>Acciones</th>
@@ -190,26 +187,6 @@
       <div class="form-row">
         <label>Cargo
           <input type="text" id="campoCargo" maxlength="80">
-        </label>
-        <label>Categoría
-          <select id="campoCategoria" required>
-            <option value="">Seleccione...</option>
-            <option value="Funcionario">Funcionario</option>
-            <option value="Visitante">Visitante</option>
-            <option value="Vigilancia">Vigilancia</option>
-            <option value="Administrativo">Administrativo</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="form-row">
-        <label>Género
-          <select id="campoGenero">
-            <option value="">Seleccione...</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Femenino">Femenino</option>
-            <option value="Otro">Otro</option>
-          </select>
         </label>
         <label>Teléfono
           <input type="text" id="campoTelefono" maxlength="20">
@@ -299,26 +276,6 @@
       </div>
 
       <div class="form-row">
-        <label>Categoría
-          <select id="editCategoria" required>
-            <option value="">Seleccione...</option>
-            <option value="Funcionario">Funcionario</option>
-            <option value="Visitante">Visitante</option>
-            <option value="Vigilancia">Vigilancia</option>
-            <option value="Administrativo">Administrativo</option>
-          </select>
-        </label>
-        <label>Género
-          <select id="editGenero">
-            <option value="">Seleccione...</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Femenino">Femenino</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="form-row">
         <label>Teléfono
           <input type="text" id="editTelefono" maxlength="20">
         </label>
@@ -382,7 +339,10 @@
 <script>
   // Se ejecuta apenas termina de cargar pywebview (no antes, porque
   // window.pywebview.api todavía no existiría).
-  window.addEventListener('pywebviewready', cargarFuncionarios);
+  window.addEventListener('pywebviewready', () => {
+    cargarFuncionarios();
+    cargarFiltroAreas();
+  });
 
   async function cargarFuncionarios() {
     const resultado = await window.pywebview.api.listar_funcionarios();
@@ -392,20 +352,29 @@
       return;
     }
     funcionariosSinFiltrar = resultado.datos;
-    aplicarFiltroCategoria();
+    aplicarFiltroArea();
 
     pintarTabla(resultado.datos);
   }
-    function aplicarFiltroCategoria() {
-    const categoriaSeleccionada = document.getElementById('filtroCategoria').value;
-
-    const filtrados = categoriaSeleccionada === ''
+  function aplicarFiltroArea() {
+    const areaSeleccionada = document.getElementById('filtroArea').value;
+    const filtrados = areaSeleccionada === ''
       ? funcionariosSinFiltrar
-      : funcionariosSinFiltrar.filter(f => f.categoria === categoriaSeleccionada);
-
+      : funcionariosSinFiltrar.filter(f => f.nombre_area === areaSeleccionada);
     pintarTabla(filtrados);
   }
 
+  async function cargarFiltroAreas() {
+    const select = document.getElementById('filtroArea');
+    const resultado = await window.pywebview.api.listar_areas();
+    if (!resultado.ok) return;
+    resultado.datos.forEach(a => {
+      const opcion = document.createElement('option');
+      opcion.value = a.nombre_area;
+      opcion.textContent = a.nombre_area;
+      select.appendChild(opcion);
+    });
+  }
     const FUNCIONARIOS_POR_PAGINA = 10;
   let funcionariosCompletos = [];
   let funcionariosSinFiltrar = [];  // ← nueva: guarda TODOS antes de aplicar el filtro
@@ -449,7 +418,7 @@
         <td>${indice + 1}</td>
         <td>${nombreCompleto}</td>
         <td>${f.id_funcionario}</td>
-        <td>${f.categoria ?? '-'}</td>
+        <td>${f.nombre_area ?? '-'}</td>
         <td>${huella}</td>
         <td><span class="badge ${estadoClase}">${estadoTexto}</span></td>
         <td>
@@ -525,7 +494,7 @@
       const resultado = await window.pywebview.api.buscar_funcionarios(texto);
       if (resultado.ok) {
         funcionariosSinFiltrar = resultado.datos;
-        aplicarFiltroCategoria();
+        aplicarFiltroArea();
       }
     }, 300);
   });
@@ -560,7 +529,7 @@
   function gestionarHuella(id) {
     mostrarAviso('Gestionar huella de ' + id + ' — pendiente de construir');
   }
-        async function alternarEstadoFuncionario(id, estaActivo) {
+  async function alternarEstadoFuncionario(id, estaActivo) {
     const nuevoEstado = estaActivo ? 'INACTIVO' : 'ACTIVO';
     const mensaje = estaActivo
       ? 'No se elimina su información ni su historial, solo deja de aparecer como activo.'
@@ -612,9 +581,7 @@
     document.getElementById('editDocumento').value = f.id_funcionario;
     document.getElementById('editNombres').value = f.nombres || '';
     document.getElementById('editApellidos').value = f.apellidos || '';
-    document.getElementById('editCargo').value = f.cargo || '';
-    document.getElementById('editCategoria').value = f.categoria || '';
-    document.getElementById('editGenero').value = f.genero || '';
+    document.getElementById('editProfesion').value = f.profesion || '';
     document.getElementById('editTelefono').value = f.telefono || '';
     document.getElementById('editCorreo').value = f.correo_electronico || '';
     document.getElementById('editHorarioTexto').value = f.nombre_turno || 'Sin asignar';
@@ -655,9 +622,7 @@
     const datos = {
       nombres: document.getElementById('editNombres').value.trim(),
       apellidos: document.getElementById('editApellidos').value.trim(),
-      cargo: document.getElementById('editCargo').value.trim(),
-      categoria: document.getElementById('editCategoria').value,
-      genero: document.getElementById('editGenero').value,
+      profesion: document.getElementById('editProfesion').value.trim(),
       telefono: document.getElementById('editTelefono').value.trim(),
       correo_electronico: document.getElementById('editCorreo').value.trim(),
       id_area: document.getElementById('editArea').value,
@@ -773,9 +738,7 @@
       id_funcionario: document.getElementById('campoDocumento').value.trim(),
       nombres: document.getElementById('campoNombres').value.trim(),
       apellidos: document.getElementById('campoApellidos').value.trim(),
-      cargo: document.getElementById('campoCargo').value.trim(),
-      categoria: document.getElementById('campoCategoria').value,
-      genero: document.getElementById('campoGenero').value,
+      profesion: document.getElementById('campoProfesion').value.trim(),
       telefono: document.getElementById('campoTelefono').value.trim(),
       correo_electronico: document.getElementById('campoCorreo').value.trim(),
       id_area: document.getElementById('campoArea').value,
