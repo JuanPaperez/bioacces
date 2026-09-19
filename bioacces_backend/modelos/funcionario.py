@@ -97,7 +97,7 @@ def crear_funcionario(datos):
     Inserta un nuevo funcionario en la base de datos.
 
     'datos' es un diccionario que llega desde JS con las llaves:
-    id_funcionario, nombres, apellidos, cargo, categoria, genero,
+    id_funcionario, nombres, apellidos, profesion, categoria, genero,
     telefono, correo_electronico, id_area, id_horario,
     fecha_ingreso, observaciones.
 
