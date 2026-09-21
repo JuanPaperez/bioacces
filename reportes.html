@@ -117,21 +117,10 @@
         </div>
 
         <div class="filter-group">
-          <label class="group-label">Usuario</label>
+          <label class="group-label">Área</label>
           <label class="filter-input">
-            <select id="filtroUsuario" disabled title="Pendiente de construir"><option>Todos los usuarios</option></select>
-          </label>
-        </div>
-
-        <div class="filter-group">
-          <label class="group-label">Rol</label>
-          <label class="filter-input">
-            <select id="filtroRol">
-              <option value="">Todos los roles</option>
-              <option value="Funcionario">Funcionario</option>
-              <option value="Visitante">Visitante</option>
-              <option value="Vigilancia">Vigilancia</option>
-              <option value="Administrativo">Administrativo</option>
+            <select id="filtroArea">
+              <option value="">Todas las áreas</option>
             </select>
           </label>
         </div>
@@ -154,10 +143,7 @@
           <input type="text" id="filtroBusqueda" placeholder="Buscar...">
         </label>
 
-        <button class="btn-filtrar" onclick="cargarReportes()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-          Filtrar
-        </button>
+        
 
         <button class="btn-ghost" onclick="limpiarFiltrosReportes()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>
@@ -188,7 +174,7 @@
                 <th>Hora</th>
                 <th>Usuario</th>
                 <th>Documento</th>
-                <th>Rol</th>
+                <th>Área</th>
                 <th>Tipo de Acceso</th>
                 <th>Estado</th>
                 <th>Código de registro</th>
@@ -287,15 +273,28 @@
 
   window.addEventListener('pywebviewready', () => {
     inicializarGraficaReportes();
+    cargarFiltroAreas();
     cargarReportes();
   });
+
+  async function cargarFiltroAreas() {
+    const select = document.getElementById('filtroArea');
+    const resultado = await window.pywebview.api.listar_areas();
+    if (!resultado.ok) return;
+    resultado.datos.forEach(a => {
+      const opcion = document.createElement('option');
+      opcion.value = a.nombre_area;
+      opcion.textContent = a.nombre_area;
+      select.appendChild(opcion);
+    });
+  }
 
   function obtenerFiltrosReportes() {
     return {
       fecha_desde: document.getElementById('filtroFechaDesde').value,
       fecha_hasta: document.getElementById('filtroFechaHasta').value,
       estado: document.getElementById('filtroEstado').value,
-      categoria: document.getElementById('filtroRol').value,
+      area: document.getElementById('filtroArea').value,
       texto_busqueda: document.getElementById('filtroBusqueda').value.trim()
     };
   }
@@ -354,7 +353,7 @@
         <td>${r.hora}</td>
         <td>${nombreCompleto}</td>
         <td>${r.id_funcionario ?? '-'}</td>
-        <td>${r.categoria ?? '-'}</td>
+        <td>${r.nombre_area ?? '-'}</td>
         <td>${r.tipo_acceso}</td>
         <td><span class="badge ${estadoClase}">${r.estado.toUpperCase()}</span></td>
         <td>${r.codigo_registro}</td>
@@ -402,7 +401,7 @@
     document.getElementById('filtroFechaDesde').value = '';
     document.getElementById('filtroFechaHasta').value = '';
     document.getElementById('filtroEstado').value = '';
-    document.getElementById('filtroRol').value = '';
+    document.getElementById('filtroArea').value = '';
     document.getElementById('filtroBusqueda').value = '';
     cargarReportes();
   }
@@ -480,7 +479,7 @@
   document.getElementById('filtroFechaDesde').addEventListener('change', cargarReportes);
   document.getElementById('filtroFechaHasta').addEventListener('change', cargarReportes);
   document.getElementById('filtroEstado').addEventListener('change', cargarReportes);
-  document.getElementById('filtroRol').addEventListener('change', cargarReportes);
+  document.getElementById('filtroArea').addEventListener('change', cargarReportes);
   document.getElementById('selectorPorPaginaReportes').addEventListener('change', cambiarRegistrosPorPagina);
 
   // Búsqueda con debounce (espera 300ms sin escribir antes de consultar)

@@ -178,6 +178,16 @@ class Api:
             return {"ok": True, "id": id_creado, "mensaje": "Usuario creado correctamente."}
         except Exception as error:
             return {"ok": False, "error": str(error)}
+        
+    def obtener_funcionario(self, id_funcionario):
+        """Llamado desde JS al abrir el modal de Editar Usuario."""
+        try:
+            datos = funcionario.obtener_funcionario(id_funcionario)
+            if datos:
+                return {"ok": True, "datos": datos}
+            return {"ok": False, "error": "No se encontró el funcionario."}
+        except Exception as error:
+            return {"ok": False, "error": str(error)}
 
     def actualizar_funcionario(self, id_funcionario, datos):
         """Recibe el ID del funcionario y un diccionario con los campos modificados."""
@@ -340,7 +350,7 @@ class Api:
                 fecha_desde=filtros.get("fecha_desde") or None,
                 fecha_hasta=filtros.get("fecha_hasta") or None,
                 estado=filtros.get("estado") or None,
-                categoria=filtros.get("categoria") or None,
+                area=filtros.get("area") or None,
                 texto_busqueda=filtros.get("texto_busqueda") or None,
             )
             return {"ok": True, "datos": datos}
@@ -353,7 +363,7 @@ class Api:
             datos = registro_acceso.obtener_estadisticas_reportes(
                 fecha_desde=filtros.get("fecha_desde") or None,
                 fecha_hasta=filtros.get("fecha_hasta") or None,
-                categoria=filtros.get("categoria") or None,
+                area=filtros.get("area") or None,
                 texto_busqueda=filtros.get("texto_busqueda") or None,
             )
             return {"ok": True, "datos": datos}
@@ -366,7 +376,7 @@ class Api:
             datos = registro_acceso.obtener_tendencia_accesos(
                 fecha_desde=filtros.get("fecha_desde") or None,
                 fecha_hasta=filtros.get("fecha_hasta") or None,
-                categoria=filtros.get("categoria") or None,
+                area=filtros.get("area") or None,
                 texto_busqueda=filtros.get("texto_busqueda") or None,
             )
             return {"ok": True, "datos": datos}
@@ -399,7 +409,7 @@ class Api:
                 fecha_desde=filtros.get("fecha_desde") or None,
                 fecha_hasta=filtros.get("fecha_hasta") or None,
                 estado=filtros.get("estado") or None,
-                categoria=filtros.get("categoria") or None,
+                area=filtros.get("area") or None,
                 texto_busqueda=filtros.get("texto_busqueda") or None,
             )
             return {"ok": True, "mensaje": f"Se exportaron {total} registros correctamente.", "ruta": ruta_destino}

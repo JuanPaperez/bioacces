@@ -15,16 +15,16 @@ filtros, para no duplicar la misma consulta en dos archivos.
 from database.conexion import obtener_conexion
 
 
-def listar_registros(fecha_desde=None, fecha_hasta=None, estado=None, categoria=None, texto_busqueda=None):
+def listar_registros(fecha_desde=None, fecha_hasta=None, estado=None, area=None, texto_busqueda=None):
     """
     Devuelve los registros de acceso que cumplen los filtros dados,
-    del más reciente al más antiguo, con nombre/documento/categoría
-    del funcionario ya incluidos (LEFT JOIN contra funcionarios).
+    del más reciente al más antiguo, con nombre/documento/área
+    del funcionario ya incluidos.
 
     Todos los filtros son opcionales — si no se pasa ninguno, trae
-    todo. 'categoria' filtra por el rol real del funcionario
-    (Funcionario/Visitante/Vigilancia/Administrativo). El filtro de
-    texto busca coincidencia parcial en nombre, apellido o documento.
+    todo. 'area' filtra por el nombre_area real del funcionario. El
+    filtro de texto busca coincidencia parcial en nombre, apellido o
+    documento.
     """
     conexion = obtener_conexion()
     cursor = conexion.cursor(dictionary=True)
@@ -41,9 +41,9 @@ def listar_registros(fecha_desde=None, fecha_hasta=None, estado=None, categoria=
     if estado:
         condiciones.append("r.estado = %s")
         valores.append(estado)
-    if categoria:
-        condiciones.append("f.categoria = %s")
-        valores.append(categoria)
+    if area:
+        condiciones.append("a.nombre_area = %s")
+        valores.append(area)
     if texto_busqueda:
         condiciones.append("(f.nombres LIKE %s OR f.apellidos LIKE %s OR f.id_funcionario LIKE %s)")
         patron = f"%{texto_busqueda}%"
@@ -55,9 +55,10 @@ def listar_registros(fecha_desde=None, fecha_hasta=None, estado=None, categoria=
         SELECT
             r.id_registro, r.fecha, r.hora, r.tipo_acceso,
             r.estado, r.codigo_registro,
-            f.id_funcionario, f.nombres, f.apellidos, f.categoria
+            f.id_funcionario, f.nombres, f.apellidos, a.nombre_area
         FROM registros_acceso r
         LEFT JOIN funcionarios f ON r.id_funcionario = f.id_funcionario
+        LEFT JOIN areas a ON f.id_area = a.id_area
         {where_sql}
         ORDER BY r.fecha DESC, r.hora DESC
     """
@@ -92,7 +93,7 @@ def _formatear_hora(valor_hora):
     return f"{horas_12:02d}:{minutos:02d} {sufijo}"
 
 
-def obtener_estadisticas_reportes(fecha_desde=None, fecha_hasta=None, categoria=None, texto_busqueda=None):
+def obtener_estadisticas_reportes(fecha_desde=None, fecha_hasta=None, area=None, texto_busqueda=None):
     """
     Devuelve los 4 totales de las tarjetas de Reportes (ingreso, salida,
     permitidos, denegados) para el periodo dado, y el % de cambio contra
@@ -111,9 +112,9 @@ def obtener_estadisticas_reportes(fecha_desde=None, fecha_hasta=None, categoria=
         if f_hasta:
             condiciones.append("r.fecha <= %s")
             valores.append(f_hasta)
-        if categoria:
-            condiciones.append("f.categoria = %s")
-            valores.append(categoria)
+        if area:
+            condiciones.append("a.nombre_area = %s")
+            valores.append(area)
         if texto_busqueda:
             condiciones.append("(f.nombres LIKE %s OR f.apellidos LIKE %s OR f.id_funcionario LIKE %s)")
             patron = f"%{texto_busqueda}%"
@@ -129,6 +130,7 @@ def obtener_estadisticas_reportes(fecha_desde=None, fecha_hasta=None, categoria=
                 SUM(CASE WHEN r.estado = 'Denegado' THEN 1 ELSE 0 END) AS denegados
             FROM registros_acceso r
             LEFT JOIN funcionarios f ON r.id_funcionario = f.id_funcionario
+            LEFT JOIN areas a ON f.id_area = a.id_area
             {where_sql}
         """
         cursor.execute(consulta, valores)
@@ -168,7 +170,7 @@ def obtener_estadisticas_reportes(fecha_desde=None, fecha_hasta=None, categoria=
     }
 
 
-def obtener_tendencia_accesos(fecha_desde=None, fecha_hasta=None, categoria=None, texto_busqueda=None):
+def obtener_tendencia_accesos(fecha_desde=None, fecha_hasta=None, area=None, texto_busqueda=None):
     """
     Devuelve, agrupado por día, el número de accesos Permitidos y
     Denegados dentro del periodo — esto alimenta la gráfica de barras.
@@ -184,9 +186,9 @@ def obtener_tendencia_accesos(fecha_desde=None, fecha_hasta=None, categoria=None
     if fecha_hasta:
         condiciones.append("r.fecha <= %s")
         valores.append(fecha_hasta)
-    if categoria:
-        condiciones.append("f.categoria = %s")
-        valores.append(categoria)
+    if area:
+        condiciones.append("a.nombre_area = %s")
+        valores.append(area)
     if texto_busqueda:
         condiciones.append("(f.nombres LIKE %s OR f.apellidos LIKE %s OR f.id_funcionario LIKE %s)")
         patron = f"%{texto_busqueda}%"
@@ -201,6 +203,7 @@ def obtener_tendencia_accesos(fecha_desde=None, fecha_hasta=None, categoria=None
             SUM(CASE WHEN r.estado = 'Denegado' THEN 1 ELSE 0 END) AS denegados
         FROM registros_acceso r
         LEFT JOIN funcionarios f ON r.id_funcionario = f.id_funcionario
+        LEFT JOIN areas a ON f.id_area = a.id_area
         {where_sql}
         GROUP BY r.fecha
         ORDER BY r.fecha ASC
@@ -218,8 +221,8 @@ def obtener_tendencia_accesos(fecha_desde=None, fecha_hasta=None, categoria=None
 
     return resultados
 
-  # Excel
-def generar_excel_reportes(ruta_destino, fecha_desde=None, fecha_hasta=None, estado=None, categoria=None, texto_busqueda=None):
+
+def generar_excel_reportes(ruta_destino, fecha_desde=None, fecha_hasta=None, estado=None, area=None, texto_busqueda=None):
     """
     Genera un archivo .xlsx en ruta_destino con los registros de acceso
     que cumplen los filtros dados (los mismos que usa la tabla de
@@ -234,7 +237,7 @@ def generar_excel_reportes(ruta_destino, fecha_desde=None, fecha_hasta=None, est
         fecha_desde=fecha_desde,
         fecha_hasta=fecha_hasta,
         estado=estado,
-        categoria=categoria,
+        area=area,
         texto_busqueda=texto_busqueda,
     )
 
@@ -242,7 +245,7 @@ def generar_excel_reportes(ruta_destino, fecha_desde=None, fecha_hasta=None, est
     hoja = libro.active
     hoja.title = "Reportes de Acceso"
 
-    encabezados = ["ID", "Fecha", "Hora", "Usuario", "Documento", "Rol", "Tipo de Acceso", "Estado", "Código de registro"]
+    encabezados = ["ID", "Fecha", "Hora", "Usuario", "Documento", "Área", "Tipo de Acceso", "Estado", "Código de registro"]
     hoja.append(encabezados)
 
     fuente_encabezado = Font(bold=True, color="FFFFFF")
@@ -269,7 +272,7 @@ def generar_excel_reportes(ruta_destino, fecha_desde=None, fecha_hasta=None, est
             r["hora"],
             nombre_completo,
             r.get("id_funcionario") or "-",
-            r.get("categoria") or "-",
+            r.get("nombre_area") or "-",
             r["tipo_acceso"],
             estado_normalizado,
             r["codigo_registro"],
