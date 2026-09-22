@@ -107,14 +107,14 @@ def crear_funcionario(datos):
     cursor = conexion.cursor()
 
     consulta = """
-        INSERT INTO funcionarios (
-            id_funcionario, nombres, apellidos, cargo, categoria,
-            genero, telefono, correo_electronico, id_area, id_horario,
-            fecha_ingreso, estado, observaciones
-        ) VALUES (
-            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
-        )
-    """
+    INSERT INTO funcionarios (
+        id_funcionario, nombres, apellidos, profesion,
+        telefono, correo_electronico, id_area, id_horario,
+        fecha_ingreso, estado, observaciones
+    ) VALUES (
+        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+    )
+"""
 
     valores = (
         datos.get("id_funcionario"),
