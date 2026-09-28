@@ -103,7 +103,8 @@
           <select id="filtroEstado">
             <option value="">Todos</option>
             <option value="PERMITIDO">Permitido</option>
-            <option value="DENEGADO">Denegado</option>
+            <option value="HUELLA NO RECONOCIDA">Huella no reconocida</option>
+            <option value="NO_AUTORIZADO">No autorizado</option>
           </select>
         </label>
 
@@ -117,10 +118,7 @@
           Limpiar filtros
         </button>
 
-        <button class="btn-export" onclick="mostrarAvisoExportar()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Exportar
-        </button>
+        
       </div>
 
       <!-- Tarjetas de totales -->
@@ -172,7 +170,7 @@
             <thead>
               <tr>
                 <th>ID</th><th>Fecha</th><th>Hora</th><th>Usuario</th>
-                <th>Documento</th><th>Rol</th><th>Tipo de Acceso</th>
+                <th>Documento</th><th>Area</th><th>Movimiento</th><th>Tipo de Acceso</th>
                 <th>Estado</th><th>Código de registro</th>
               </tr>
             </thead>
@@ -224,8 +222,8 @@
 
   function actualizarEstadisticas(registros) {
     const total = registros.length;
-        const permitidos = registros.filter(r => r.estado.toUpperCase() === 'PERMITIDO').length;
-    const denegados = registros.filter(r => r.estado.toUpperCase() === 'DENEGADO').length;
+    const permitidos = registros.filter(r => r.resultado === 'PERMITIDO').length;
+    const denegados = registros.filter(r => r.resultado !== 'PERMITIDO').length;
 
     document.getElementById('statTotalAccesos').textContent = total;
     document.getElementById('statPermitidos').textContent = permitidos;
@@ -262,8 +260,8 @@
 
     cuerpoTabla.innerHTML = '';
     registrosPagina.forEach(r => {
-            const nombreCompleto = r.nombres ? `${r.nombres} ${r.apellidos}` : 'Desconocido';
-      const estadoClase = r.estado.toUpperCase() === 'PERMITIDO' ? 'permitido' : 'denegado';
+      const nombreCompleto = r.nombres ? `${r.nombres} ${r.apellidos}` : 'Desconocido';
+      const estadoClase = r.resultado === 'PERMITIDO' ? 'permitido' : 'denegado';
 
       const fila = document.createElement('tr');
       fila.innerHTML = `
@@ -272,9 +270,10 @@
         <td>${r.hora}</td>
         <td>${nombreCompleto}</td>
         <td>${r.id_funcionario ?? '-'}</td>
-        <td>${r.categoria ?? '-'}</td>
+        <td>${r.nombre_area ?? '-'}</td>
         <td>${r.tipo_acceso}</td>
-        <td><span class="badge ${estadoClase}">${r.estado.toUpperCase()}</span></td>
+        <td>${r.modo_registro === 'MANUAL' ? 'Manual' : 'Huella Digital'}</td>
+        <td><span class="badge ${estadoClase}">${r.estado_visible}</span></td>
         <td>${r.codigo_registro}</td>
       `;
       cuerpoTabla.appendChild(fila);
@@ -318,9 +317,7 @@
     cargarRegistrosAcceso();
   }
 
-  function mostrarAvisoExportar() {
-    alert('Exportar — pendiente de construir (RF12)');
-  }
+  
 
   // Recarga automática al cambiar fecha o estado
   document.getElementById('filtroFechaDesde').addEventListener('change', cargarRegistrosAcceso);

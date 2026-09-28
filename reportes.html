@@ -130,8 +130,9 @@
           <label class="filter-input">
             <select id="filtroEstado">
               <option value="">Todos</option>
-              <option value="Permitido">Permitido</option>
-              <option value="Denegado">Denegado</option>
+              <option value="PERMITIDO">Permitido</option>
+              <option value="HUELLA NO RECONOCIDA">Huella no reconocida</option>
+              <option value="NO_AUTORIZADO">No autorizado</option>
             </select>
           </label>
         </div>
@@ -175,6 +176,7 @@
                 <th>Usuario</th>
                 <th>Documento</th>
                 <th>Área</th>
+                <th>Movimiento</th>
                 <th>Tipo de Acceso</th>
                 <th>Estado</th>
                 <th>Código de registro</th>
@@ -344,7 +346,7 @@
     cuerpoTabla.innerHTML = '';
     registrosPagina.forEach(r => {
       const nombreCompleto = r.nombres ? `${r.nombres} ${r.apellidos}` : 'Desconocido';
-      const estadoClase = r.estado.toUpperCase() === 'PERMITIDO' ? 'permitido' : 'denegado';
+      const estadoClase = r.resultado === 'PERMITIDO' ? 'permitido' : 'denegado';
 
       const fila = document.createElement('tr');
       fila.innerHTML = `
@@ -355,7 +357,8 @@
         <td>${r.id_funcionario ?? '-'}</td>
         <td>${r.nombre_area ?? '-'}</td>
         <td>${r.tipo_acceso}</td>
-        <td><span class="badge ${estadoClase}">${r.estado.toUpperCase()}</span></td>
+        <td>${r.modo_registro === 'MANUAL' ? 'Manual' : 'Huella Digital'}</td>
+        <td><span class="badge ${estadoClase}">${r.estado_visible}</span></td>
         <td>${r.codigo_registro}</td>
       `;
       cuerpoTabla.appendChild(fila);

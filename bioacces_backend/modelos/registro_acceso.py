@@ -39,7 +39,7 @@ def listar_registros(fecha_desde=None, fecha_hasta=None, estado=None, area=None,
         condiciones.append("r.fecha <= %s")
         valores.append(fecha_hasta)
     if estado:
-        condiciones.append("r.estado = %s")
+        condiciones.append("r.resultado = %s")
         valores.append(estado)
     if area:
         condiciones.append("a.nombre_area = %s")
@@ -54,7 +54,7 @@ def listar_registros(fecha_desde=None, fecha_hasta=None, estado=None, area=None,
     consulta = f"""
         SELECT
             r.id_registro, r.fecha, r.hora, r.tipo_acceso,
-            r.estado, r.codigo_registro,
+            r.resultado, r.puntualidad, r.modo_registro, r.codigo_registro,
             f.id_funcionario, f.nombres, f.apellidos, a.nombre_area
         FROM registros_acceso r
         LEFT JOIN funcionarios f ON r.id_funcionario = f.id_funcionario
@@ -74,9 +74,9 @@ def listar_registros(fecha_desde=None, fecha_hasta=None, estado=None, area=None,
             fila["fecha"] = fila["fecha"].strftime("%d/%m/%Y")
         if fila.get("hora"):
             fila["hora"] = _formatear_hora(fila["hora"])
+        fila["estado_visible"] = armar_estado_visible(fila["resultado"], fila["puntualidad"], fila["modo_registro"])
 
     return resultados
-
 
 def _formatear_hora(valor_hora):
     """
@@ -91,6 +91,27 @@ def _formatear_hora(valor_hora):
     horas_12 = horas % 12 or 12
 
     return f"{horas_12:02d}:{minutos:02d} {sufijo}"
+
+def armar_estado_visible(resultado, puntualidad, modo_registro):
+    etiquetas_resultado = {
+        "PERMITIDO": "PERMITIDO",
+        "HUELLA_NO_RECONOCIDA": "NO SE RECONOCE LA HUELLA",
+        "NO_AUTORIZADO": "NO AUTORIZADO",
+    }
+    texto = etiquetas_resultado.get(resultado, resultado)
+
+    if modo_registro == "MANUAL":
+        texto += " MANUAL"
+
+    etiquetas_puntualidad = {
+        "TARDE": "TARDE",
+        "TARDE_JUSTIFICADO": "JUSTIFICADO",
+        "FUERA_DE_TURNO": "FUERA DE TURNO",
+    }
+    if puntualidad in etiquetas_puntualidad:
+        texto += f" ({etiquetas_puntualidad[puntualidad]})"
+
+    return texto
 
 
 def obtener_estadisticas_reportes(fecha_desde=None, fecha_hasta=None, area=None, texto_busqueda=None):
@@ -126,8 +147,8 @@ def obtener_estadisticas_reportes(fecha_desde=None, fecha_hasta=None, area=None,
             SELECT
                 SUM(CASE WHEN r.tipo_acceso = 'Ingreso' THEN 1 ELSE 0 END) AS total_ingreso,
                 SUM(CASE WHEN r.tipo_acceso = 'Salida' THEN 1 ELSE 0 END) AS total_salida,
-                SUM(CASE WHEN r.estado = 'Permitido' THEN 1 ELSE 0 END) AS permitidos,
-                SUM(CASE WHEN r.estado = 'Denegado' THEN 1 ELSE 0 END) AS denegados
+                SUM(CASE WHEN r.resultado = 'PERMITIDO' THEN 1 ELSE 0 END) AS permitidos,
+                SUM(CASE WHEN r.resultado != 'PERMITIDO' THEN 1 ELSE 0 END) AS denegados
             FROM registros_acceso r
             LEFT JOIN funcionarios f ON r.id_funcionario = f.id_funcionario
             LEFT JOIN areas a ON f.id_area = a.id_area
@@ -199,8 +220,8 @@ def obtener_tendencia_accesos(fecha_desde=None, fecha_hasta=None, area=None, tex
     consulta = f"""
         SELECT
             r.fecha,
-            SUM(CASE WHEN r.estado = 'Permitido' THEN 1 ELSE 0 END) AS permitidos,
-            SUM(CASE WHEN r.estado = 'Denegado' THEN 1 ELSE 0 END) AS denegados
+            SUM(CASE WHEN r.resultado = 'PERMITIDO' THEN 1 ELSE 0 END) AS permitidos,
+            SUM(CASE WHEN r.resultado != 'PERMITIDO' THEN 1 ELSE 0 END) AS denegados
         FROM registros_acceso r
         LEFT JOIN funcionarios f ON r.id_funcionario = f.id_funcionario
         LEFT JOIN areas a ON f.id_area = a.id_area
@@ -220,6 +241,7 @@ def obtener_tendencia_accesos(fecha_desde=None, fecha_hasta=None, area=None, tex
         fila["denegados"] = int(fila["denegados"] or 0)
 
     return resultados
+
 
 
 def generar_excel_reportes(ruta_destino, fecha_desde=None, fecha_hasta=None, estado=None, area=None, texto_busqueda=None):
@@ -245,7 +267,7 @@ def generar_excel_reportes(ruta_destino, fecha_desde=None, fecha_hasta=None, est
     hoja = libro.active
     hoja.title = "Reportes de Acceso"
 
-    encabezados = ["ID", "Fecha", "Hora", "Usuario", "Documento", "Área", "Tipo de Acceso", "Estado", "Código de registro"]
+    encabezados = ["Fecha", "Hora", "Usuario", "Documento", "Área", "Estado"]
     hoja.append(encabezados)
 
     fuente_encabezado = Font(bold=True, color="FFFFFF")
@@ -264,23 +286,20 @@ def generar_excel_reportes(ruta_destino, fecha_desde=None, fecha_hasta=None, est
     fila_actual = 2
     for r in registros:
         nombre_completo = f"{r['nombres']} {r['apellidos']}" if r.get("nombres") else "Desconocido"
-        estado_normalizado = str(r["estado"]).strip().capitalize()
+        estado_visible = r["estado_visible"]
 
         hoja.append([
-            r["id_registro"],
             r["fecha"],
             r["hora"],
             nombre_completo,
             r.get("id_funcionario") or "-",
             r.get("nombre_area") or "-",
-            r["tipo_acceso"],
-            estado_normalizado,
-            r["codigo_registro"],
+            estado_visible,
         ])
 
-        celda_estado = hoja.cell(row=fila_actual, column=8)
+        celda_estado = hoja.cell(row=fila_actual, column=6)
         celda_estado.alignment = Alignment(horizontal="center")
-        if estado_normalizado == "Permitido":
+        if r["resultado"] == "PERMITIDO":
             celda_estado.fill = relleno_permitido
             celda_estado.font = fuente_permitido
         else:
@@ -289,7 +308,7 @@ def generar_excel_reportes(ruta_destino, fecha_desde=None, fecha_hasta=None, est
 
         fila_actual += 1
 
-    anchos = [6, 12, 12, 28, 14, 16, 14, 12, 16]
+    anchos = [12, 12, 28, 14, 16, 24]
     for indice, ancho in enumerate(anchos, start=1):
         letra_columna = get_column_letter(indice)
         hoja.column_dimensions[letra_columna].width = ancho

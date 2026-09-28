@@ -390,10 +390,13 @@ class Api:
         los mismos filtros que la tabla.
         """
         try:
+            from datetime import datetime
+            sello_tiempo = datetime.now().strftime("%Y-%m-%d_%H%M")
+            
             ventana = webview.windows[0]
             ruta_elegida = ventana.create_file_dialog(
                 webview.SAVE_DIALOG,
-                save_filename="reporte_accesos.xlsx",
+                save_filename=f"reporte_accesos_{sello_tiempo}.xlsx",
                 file_types=("Archivos Excel (*.xlsx)",)
             )
 
