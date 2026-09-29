@@ -95,7 +95,7 @@ def _formatear_hora(valor_hora):
 def armar_estado_visible(resultado, puntualidad, modo_registro):
     etiquetas_resultado = {
         "PERMITIDO": "PERMITIDO",
-        "HUELLA_NO_RECONOCIDA": "NO SE RECONOCE LA HUELLA",
+        "HUELLA_NO_RECONOCIDA": "HUELLA NO RECONOCIDA",
         "NO_AUTORIZADO": "NO AUTORIZADO",
     }
     texto = etiquetas_resultado.get(resultado, resultado)

@@ -261,7 +261,13 @@
     cuerpoTabla.innerHTML = '';
     registrosPagina.forEach(r => {
       const nombreCompleto = r.nombres ? `${r.nombres} ${r.apellidos}` : 'Desconocido';
-      const estadoClase = r.resultado === 'PERMITIDO' ? 'permitido' : 'denegado';
+      function calcularClaseEstado(r) {
+        if (r.resultado !== 'PERMITIDO') return 'denegado';
+        if (r.puntualidad === 'TARDE') return 'denegado';       // rojo, aunque sea PERMITIDO
+        if (r.puntualidad === 'FUERA_DE_TURNO') return 'fuera-turno'; // naranja, clase nueva
+        return 'permitido'; // A_TIEMPO o JUSTIFICADO, verde
+      }
+      const estadoClase = calcularClaseEstado(r);
 
       const fila = document.createElement('tr');
       fila.innerHTML = `
